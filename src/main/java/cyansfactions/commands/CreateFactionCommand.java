@@ -38,7 +38,7 @@ public class CreateFactionCommand implements CommandExecutor {
         }
 
         if (economy.getBalance(player) < createCost) {
-            player.sendMessage("§3[CyansFactions]§r You don't have enough money to create a faction. It costs $" + createCost + ".");
+            player.sendMessage("§3[CyansFactions]§r You don't have enough money to create a faction. It costs " + createCost + "$.");
             return true;
         }
 

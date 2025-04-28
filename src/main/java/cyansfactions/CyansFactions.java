@@ -70,11 +70,11 @@ public class CyansFactions extends JavaPlugin {
         }
 
         if (getCommand("sethome") != null) {
-            getCommand("sethome").setExecutor(new SetHomeCommand(factionManager, chunkManager, economy));
+            getCommand("sethome").setExecutor(new SetHomeCommand(factionManager, chunkManager));
         }
 
         if (getCommand("home") != null) {
-            getCommand("home").setExecutor(new SetHomeCommand(factionManager, chunkManager, economy));
+            getCommand("home").setExecutor(new SetHomeCommand(factionManager, chunkManager));
 
         }
 

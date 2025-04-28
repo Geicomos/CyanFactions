@@ -4,7 +4,6 @@ import cyansfactions.managers.FactionManager;
 import cyansfactions.CyansFactions;
 import cyansfactions.managers.ChunkManager;
 import cyansfactions.models.Faction;
-import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -17,7 +16,7 @@ public class SetHomeCommand implements CommandExecutor {
     private final ChunkManager chunkManager;
     private final double createCost = CyansFactions.getInstance().getConfig().getDouble("home.cost-to-set", 300);
 
-    public SetHomeCommand(FactionManager factionManager, ChunkManager chunkManager, Economy economy) {
+    public SetHomeCommand(FactionManager factionManager, ChunkManager chunkManager) {
         this.factionManager = factionManager;
         this.chunkManager = chunkManager;
     }
@@ -50,12 +49,12 @@ public class SetHomeCommand implements CommandExecutor {
         }
 
         if (!faction.withdraw(createCost)) {
-            player.sendMessage("§3[CyansFactions]§r Your faction doesn't have enough money to set a home. Need $" + createCost + ".");
+            player.sendMessage("§3[CyansFactions]§r Your faction doesn't have enough money to set a home. Need " + createCost + "$.");
             return true;
         }
 
         faction.setHome(player.getLocation());
-        player.sendMessage("§3[CyansFactions]§r §aFaction home set successfully! (-$" + createCost + ")");
+        player.sendMessage("§3[CyansFactions]§r §aFaction home set successfully!");
         return true;
     }
 }

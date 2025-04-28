@@ -51,7 +51,7 @@ public class HomeCommand implements CommandExecutor {
             long lastUsed = cooldowns.get(uuid);
             long secondsLeft = (lastUsed + (homeCooldown * 1000L) - now) / 1000L;
             if (secondsLeft > 0) {
-                player.sendMessage("§3[CyansFactions]§r §cYou must wait " + secondsLeft + " seconds before using /csr home again.");
+                player.sendMessage("§3[CyansFactions]§r §cYou must wait " + secondsLeft + " seconds before using /csf home again.");
                 return true;
             }
         }

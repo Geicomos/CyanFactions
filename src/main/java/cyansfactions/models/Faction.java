@@ -56,16 +56,22 @@ public class Faction {
         this.home = home;
     }
 
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }    
+
     public double getBalance() {
         return balance;
     }
 
     public void deposit(double amount) {
-        balance += amount;
+        if (amount > 0) {
+            balance += amount;
+        }
     }
 
     public boolean withdraw(double amount) {
-        if (balance >= amount) {
+        if (amount > 0 && balance >= amount) {
             balance -= amount;
             return true;
         }

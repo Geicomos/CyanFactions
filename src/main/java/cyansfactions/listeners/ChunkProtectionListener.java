@@ -12,11 +12,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class ChunkProtectionListener implements Listener {
 
-    private final FactionManager factionManager;
     private final ChunkManager chunkManager;
 
     public ChunkProtectionListener(FactionManager factionManager, ChunkManager chunkManager) {
-        this.factionManager = factionManager;
         this.chunkManager = chunkManager;
     }
 

@@ -69,7 +69,7 @@ public class CsfCommand implements CommandExecutor {
                 break;
 
             case "sethome":
-                new SetHomeCommand(factionManager, chunkManager, economy).onCommand(sender, command, label, args);
+                new SetHomeCommand(factionManager, chunkManager).onCommand(sender, command, label, args);
                 break;
             
 
@@ -104,6 +104,43 @@ public class CsfCommand implements CommandExecutor {
                     player.sendMessage("§3[CyansFactions]§r Invalid number.");
                 }
             break;
+
+            case "balance":
+                if (!factionManager.hasFaction(player)) {
+                    player.sendMessage("§3[CyansFactions]§r You are not in a faction.");
+                    return true;
+                }
+                Faction faction = factionManager.getFactionByPlayer(player);
+                player.sendMessage("§3[CyansFactions]§r Your faction balance is: §a$" + faction.getBalance());
+            break;
+
+            case "withdraw":
+                if (args.length != 2) {
+                    player.sendMessage("Usage: /csf withdraw <amount>");
+                    return true;
+                }
+                try {
+                    double amount = Double.parseDouble(args[1]);
+                    if (amount <= 0) {
+                        player.sendMessage("§3[CyansFactions]§r Amount must be positive!");
+                        return true;
+                    }
+                    if (!factionManager.hasFaction(player)) {
+                        player.sendMessage("§3[CyansFactions]§r You are not in a faction.");
+                        return true;
+                    }
+                    Faction playerFaction = factionManager.getFactionByPlayer(player);
+                    if (playerFaction.getBalance() < amount) {
+                        player.sendMessage("§3[CyansFactions]§r Your faction doesn't have enough money!");
+                        return true;
+                    }
+                    playerFaction.withdraw(amount);
+                    economy.depositPlayer(player, amount);
+                    player.sendMessage("§3[CyansFactions]§r Withdrew " + amount + "$ from your faction bank!");
+                } catch (NumberFormatException e) {
+                    player.sendMessage("§3[CyansFactions]§r Invalid number.");
+                }
+                break;
 
             default:
                 player.sendMessage("Unknown subcommand. Try: createfaction, invite, claimchunk, leavefaction, sethome, home");
