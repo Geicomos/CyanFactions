@@ -8,6 +8,11 @@ home:
   cost-to-set: 100.0 # How much it costs to set the home
   cooldown-seconds: 10 # Cooldown between using /home (seconds)
 
+claim:
+  cost-to-claim: 600.0 #The amount it will cost to claim the first chunk. This is multiplied every chunk bought
+  max-claims: 20 # Max amount of claims a faction can have
+  multiply-by: 2.0 # How much the cost of a claim will be multiplied each chunk bought.
+
 warp:
   cost-to-set: 100.0 # How much it costs to set a warp
   cost-to-use: 50.0 # How much it costs to warp

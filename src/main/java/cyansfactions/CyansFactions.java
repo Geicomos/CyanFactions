@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import cyansfactions.commands.CreateFactionCommand;
 import cyansfactions.commands.CsfCommand;
+import cyansfactions.commands.FactionChatCommand;
 import cyansfactions.commands.HomeCommand;
 import cyansfactions.commands.InviteCommand;
 import cyansfactions.commands.LeaveFactionCommand;
@@ -45,6 +46,10 @@ public class CyansFactions extends JavaPlugin {
         this.factionManager = new FactionManager();
         this.chunkManager = new ChunkManager();
         this.homeCommand = new HomeCommand(factionManager);
+
+        FactionChatCommand factionChatCommand = new FactionChatCommand(factionManager);
+        getCommand("fchat").setExecutor(factionChatCommand);
+        getServer().getPluginManager().registerEvents(factionChatCommand, this);
 
         factionsDataManager.loadFactions(factionManager, chunkManager);
         // Register commands
@@ -112,4 +117,5 @@ public class CyansFactions extends JavaPlugin {
     public static Economy getEconomy() {
         return economy;
     }
+
 }

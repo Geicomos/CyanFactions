@@ -49,6 +49,11 @@ public class ChunkManager {
         return chunks;
     }
 
+    public void unclaimChunk(Chunk chunk) {
+        String key = getChunkKey(chunk);
+        claimedChunks.remove(key);
+    }
+
     private String getChunkKey(Chunk chunk) {
         return chunk.getWorld().getName() + "," + chunk.getX() + "," + chunk.getZ();
     }

@@ -2,7 +2,9 @@ C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\managers\Fac
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\ClaimChunkCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\LeaveFactionCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\CreateFactionCommand.java
+C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\UnclaimChunkCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\listeners\ChunkProtectionListener.java
+C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\listeners\FactionChatListener.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\HomeCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\CyansFactions.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\managers\ChunkManager.java

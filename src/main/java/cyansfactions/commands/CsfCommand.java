@@ -60,10 +60,14 @@ public class CsfCommand implements CommandExecutor {
                 new InviteCommand(factionManager).onCommand(sender, command, label, new String[]{args[1]});
                 break;
 
-            case "claimchunk":
+            case "claim":
                 new ClaimChunkCommand(factionManager, chunkManager).onCommand(sender, command, label, new String[]{});
                 break;
 
+            case "unclaim":
+                new UnclaimChunkCommand(factionManager, chunkManager).onCommand(sender, command, label, args);
+                break;
+            
             case "leavefaction":
                 new LeaveFactionCommand(factionManager).onCommand(sender, command, label, new String[]{});
                 break;
