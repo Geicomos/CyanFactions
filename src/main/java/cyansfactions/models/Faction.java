@@ -1,0 +1,74 @@
+package cyansfactions.models;
+
+import org.bukkit.Location;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+public class Faction {
+
+    private final String name;
+    private final UUID leader;
+    private final Set<UUID> members = new HashSet<>();
+    private Location home;
+    private double balance = 0.0; 
+
+    public Faction(String name, UUID leader) {
+        this.name = name;
+        this.leader = leader;
+        members.add(leader);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public UUID getLeader() {
+        return leader;
+    }
+
+    public Set<UUID> getMembers() {
+        return members;
+    }
+
+    public void addMember(UUID uuid) {
+        members.add(uuid);
+    }
+
+    public void removeMember(UUID uuid) {
+        members.remove(uuid);
+    }    
+
+    public boolean hasMember(UUID playerUUID) {
+        return members.contains(playerUUID);
+    }
+    
+
+    public Location getHome() {
+        return home;
+    }
+
+    public int getMemberCount() {
+        return members.size();
+    }
+    
+    public void setHome(Location home) {
+        this.home = home;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void deposit(double amount) {
+        balance += amount;
+    }
+
+    public boolean withdraw(double amount) {
+        if (balance >= amount) {
+            balance -= amount;
+            return true;
+        }
+        return false;
+    }
+}

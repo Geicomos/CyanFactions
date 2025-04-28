@@ -1,0 +1,79 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cyansfactions</groupId>
+    <artifactId>CyansFactions</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>CyansFactions</name>
+
+<dependencies>
+    <!-- Correct Spigot API -->
+    <dependency>
+        <groupId>org.spigotmc</groupId>
+        <artifactId>spigot-api</artifactId>
+        <version>1.20.1-R0.1-SNAPSHOT</version> 
+        <scope>provided</scope>
+    </dependency>
+
+    <!-- Vault API -->
+    <dependency>
+        <groupId>com.github.MilkBowl</groupId>
+        <artifactId>VaultAPI</artifactId>
+        <version>1.7</version>
+    </dependency>
+</dependencies>
+
+<repositories>
+    <repository>
+        <id>spigot-repo</id>
+        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.10.1</version>
+            <configuration>
+                <release>17</release> <!-- Your Java version -->
+            </configuration>
+        </plugin>
+
+        <!-- ✨ Plugin to copy after build -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+                <execution>
+                    <id>copy-after-build</id>
+                    <phase>package</phase> <!-- Run after compiling -->
+                    <configuration>
+                        <tasks>
+                            <copy file="${project.build.directory}/${project.build.finalName}.jar"
+                                  tofile="C:/Users/Geicomo/Downloads/testserver/plugins/CyansFactions-1.0-SNAPSHOT.jar" />
+                        </tasks>
+                    </configuration>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+
+    </plugins>
+</build>
+
+</project>

@@ -1,0 +1,16 @@
+cyansfactions\managers\ChunkManager.class
+cyansfactions\managers\FactionManager.class
+cyansfactions\storage\FactionsDataManager.class
+cyansfactions\models\Faction.class
+cyansfactions\listeners\ChunkEnterLeaveListener.class
+cyansfactions\commands\ClaimChunkCommand.class
+cyansfactions\commands\HelpCommand.class
+cyansfactions\listeners\ChunkProtectionListener.class
+cyansfactions\CyansFactions.class
+cyansfactions\commands\HomeCommand.class
+cyansfactions\commands\InviteCommand.class
+cyansfactions\commands\AcceptInviteCommand.class
+cyansfactions\commands\CreateFactionCommand.class
+cyansfactions\commands\SetHomeCommand.class
+cyansfactions\commands\CsfCommand.class
+cyansfactions\commands\LeaveFactionCommand.class

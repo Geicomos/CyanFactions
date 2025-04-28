@@ -1,0 +1,15 @@
+# CyansFactions configuration
+
+faction:
+  create-cost: 500.0 # Cost to create a faction ($)
+  max-members: 20 # Max players allowed in a faction
+
+home:
+  cost-to-set: 0.0 # How much it costs to set the home
+  cooldown-seconds: 10 # Cooldown between using /home (seconds)
+
+warp:
+  cost-to-set: 100.0 # How much it costs to set a warp
+  cost-to-use: 50.0 # How much it costs to warp
+  cooldown-seconds: 30 # Cooldown between warping (seconds)
+  max-warps: 5 # Max number of warps per faction

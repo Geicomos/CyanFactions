@@ -1,0 +1,11 @@
+name: CyansFactions
+version: 1.0
+main: cyansfactions.CyansFactions
+api-version: 1.18
+depend: [Vault]
+
+commands:
+  csf:
+    description: CyansFactions main command handler.
+    usage: /csf <subcommand>
+

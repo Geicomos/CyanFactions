@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <copy file="C:\Users\Geicomo\Downloads\CyanFactions\target/CyansFactions-1.0-SNAPSHOT.jar" tofile="C:/Users/Geicomo/Downloads/testserver/plugins/CyansFactions-1.0-SNAPSHOT.jar"/>
+</target>
+</project>
