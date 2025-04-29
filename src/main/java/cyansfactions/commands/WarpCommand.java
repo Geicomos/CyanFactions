@@ -16,11 +16,16 @@ public class WarpCommand {
     private final FactionManager factionManager;
     private final Economy economy;
     private final double warpCost = CyansFactions.getInstance().getConfig().getDouble("warp.cost-to-use", 50);
-    private final int warpCooldownSeconds = CyansFactions.getInstance().getConfig().getInt("warp.cooldown-seconds", 30);
+    private final int warpCooldownSeconds = CyansFactions.getInstance().getConfig().getInt("warp.cooldown-seconds", 120);
+    private final int pvpCooldown = CyansFactions.getInstance().getConfig().getInt("warp.pvp-cooldown", 30);
 
     // Track cooldowns: Player UUID -> timestamp of when they can warp again
     private final Map<UUID, Long> cooldowns = new HashMap<>();
-
+    private final Map<UUID, Long> lastCombat = new HashMap<>(); 
+    public Map<UUID, Long> getLastCombatMap() {
+        return lastCombat;
+    }
+    
     public WarpCommand(FactionManager factionManager, Economy economy) {
         this.factionManager = factionManager;
         this.economy = economy;
@@ -101,16 +106,28 @@ public class WarpCommand {
             }
         }
     
-        // Charge player
         if (!economy.has(player, warpCost)) {
             player.sendMessage("§3[CyansFactions]§r You need $" + warpCost + " to warp.");
             return;
         }
     
+        if (lastCombat.containsKey(playerId)) {
+            long lastHit = lastCombat.get(playerId);
+            long msSinceCombat = currentTime - lastHit;
+            long msCooldown = (long) (pvpCooldown* 1000);
+
+            if (msSinceCombat < msCooldown) {
+                long secondsLeft = (msCooldown - msSinceCombat) / 1000;
+                player.sendMessage("§3[CyansFactions]§r You are in combat! Wait " + secondsLeft + "s before warping.");
+                return;
+            }
+        }
+
         economy.withdrawPlayer(player, warpCost);
         player.teleport(warps.get(warpName));
         cooldowns.put(playerId, currentTime + (warpCooldownSeconds * 1000));
     
         player.sendMessage("§3[CyansFactions]§r Warped to '" + warpName + "' in " + targetFaction.getName() + "!");
     }    
+    
 }

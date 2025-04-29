@@ -17,6 +17,7 @@ import cyansfactions.commands.SetHomeCommand;
 import cyansfactions.listeners.ChatFormatListener;
 import cyansfactions.listeners.ChunkEnterLeaveListener;
 import cyansfactions.listeners.ChunkProtectionListener;
+import cyansfactions.listeners.CombatListener;
 import cyansfactions.managers.ChunkManager;
 import cyansfactions.managers.FactionManager;
 import cyansfactions.managers.WarManager;
@@ -51,11 +52,13 @@ public class CyansFactions extends JavaPlugin {
 
         factionsDataManager = new FactionsDataManager(this);
 
-        this.factionManager = new FactionManager();
-        this.chunkManager = new ChunkManager();
+        this.factionManager = new FactionManager(this); // 🔥 passing CyansFactions plugin instance
+        this.chunkManager = new ChunkManager(this, factionManager); // 🔥 passing plugin + factionManager        
         this.homeCommand = new HomeCommand(factionManager);
         this.warManager = new WarManager(factionManager);
         WarpCommand warpCommand = new WarpCommand(factionManager, economy);
+        getServer().getPluginManager().registerEvents(new CombatListener(warpCommand.getLastCombatMap()), this);
+
         DelWarpCommand delWarpCommand = new DelWarpCommand(factionManager);
         ListWarpsCommand listWarpsCommand = new ListWarpsCommand(factionManager);
         CsfCommand csfCommand = new CsfCommand(factionManager, factionsDataManager, chunkManager, economy, homeCommand, warManager, warpCommand, delWarpCommand, listWarpsCommand);

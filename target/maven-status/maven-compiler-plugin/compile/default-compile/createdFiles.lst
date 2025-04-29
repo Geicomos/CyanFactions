@@ -23,6 +23,7 @@ cyansfactions\commands\HomeCommand.class
 cyansfactions\commands\SetWarpCommand.class
 cyansfactions\commands\CreateFactionCommand.class
 cyansfactions\commands\DisbandCommand.class
+cyansfactions\listeners\CombatListener.class
 cyansfactions\commands\CsfCommand$1.class
 cyansfactions\commands\SetHomeCommand.class
 cyansfactions\commands\LeaveFactionCommand.class

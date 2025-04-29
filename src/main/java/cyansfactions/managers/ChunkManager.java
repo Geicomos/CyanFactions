@@ -1,5 +1,6 @@
 package cyansfactions.managers;
 
+import cyansfactions.CyansFactions;
 import cyansfactions.models.Faction;
 import org.bukkit.Chunk;
 
@@ -11,7 +12,14 @@ import java.util.Map;
 public class ChunkManager {
 
     private final Map<String, Faction> claimedChunks = new HashMap<>();
+    private final CyansFactions plugin;
+    private final FactionManager factionManager;
 
+    public ChunkManager(CyansFactions plugin, FactionManager factionManager) {
+        this.plugin = plugin;
+        this.factionManager = factionManager;
+    }
+    
     public boolean claimChunk(Faction faction, Chunk chunk) {
         String key = getChunkKey(chunk);
         if (claimedChunks.containsKey(key)) {

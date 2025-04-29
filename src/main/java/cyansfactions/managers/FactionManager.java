@@ -1,5 +1,6 @@
 package cyansfactions.managers;
 
+import cyansfactions.CyansFactions;
 import cyansfactions.models.Faction;
 import cyansfactions.storage.FactionsDataManager;
 
@@ -14,7 +15,12 @@ public class FactionManager {
     private final Map<UUID, String> playerFactions = new HashMap<>();
     private final Map<UUID, String> invites = new HashMap<>();
     private final Map<String, String> pendingAllyRequests = new HashMap<>();
+    private final CyansFactions plugin;
 
+    public FactionManager(CyansFactions plugin) {
+        this.plugin = plugin;
+    }
+    
     public boolean createFaction(Player creator, String name) {
         if (factions.containsKey(name.toLowerCase())) {
             return false;

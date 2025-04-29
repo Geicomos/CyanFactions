@@ -66,7 +66,6 @@ public class ChunkProtectionListener implements Listener {
         Faction playerFaction = chunkManager.getFactionAt(player.getLocation().getChunk());
     
         if (!faction.hasMember(player.getUniqueId())) {
-            // Check if player is at war
             if (playerFaction != null && warManager.isAtWar(playerFaction)) {
                 if (isObsidian) {
                     // Prevent mining obsidian even during war
@@ -89,20 +88,32 @@ public class ChunkProtectionListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        Chunk chunk = event.getBlock().getChunk();
-        Faction faction = chunkManager.getFactionAt(chunk);
-
-        if (faction == null) return; // Unclaimed
-
-        Faction playerFaction = chunkManager.getFactionAt(player.getLocation().getChunk());
-
-        if (playerFaction != null && warManager.isAtWar(playerFaction)) {
+        Block block = event.getBlock();
+        Chunk chunk = block.getChunk();
+        Faction chunkFaction = chunkManager.getFactionAt(chunk); // Faction owning the chunk
+    
+        Material type = block.getType();
+        boolean isTNT = type == Material.TNT;
+        boolean isTNTCart = type == Material.TNT_MINECART;
+    
+        // If it's not TNT, handle normal block placement below
+        if (!isTNT && !isTNTCart) {
+            return; // Not TNT, continue with your other block protection elsewhere
+        }
+    
+        // If chunk is unclaimed, allow placing TNT
+        if (chunkFaction == null) {
             return;
         }
-
-        if (!faction.hasMember(player.getUniqueId()) && !warManager.isAtWar(faction)) {
+    
+        // Get player's faction
+        Faction playerFaction = chunkManager.getFactionAt(player.getLocation().getChunk());
+        
+        // If the player does not belong to this faction
+        if (playerFaction == null || !chunkFaction.hasMember(player.getUniqueId())) {
             event.setCancelled(true);
-            player.sendMessage(faction.getName() + " §cDoes not allow you to place blocks.");
+            player.sendMessage("§cYou cannot place TNT in another faction's land!");
+            return;
         }
     }
 
@@ -144,7 +155,7 @@ public class ChunkProtectionListener implements Listener {
 
         Location explosionCenter = event.getLocation();
         World world = explosionCenter.getWorld();
-        int radius = 3; // 3 blocks in every direction
+        int radius = 1; // 3 blocks in every direction
 
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {

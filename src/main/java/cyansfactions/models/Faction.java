@@ -20,7 +20,7 @@ public class Faction {
     private final Map<String, String> pendingAllyRequests = new HashMap<>();
     private Location home;
     private double balance = 0.0; 
-
+    
     public Faction(String name, UUID leader) {
         this.name = name;
         this.leader = leader;
