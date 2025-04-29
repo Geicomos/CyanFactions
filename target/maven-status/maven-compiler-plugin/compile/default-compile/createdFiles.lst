@@ -12,8 +12,10 @@ cyansfactions\listeners\ChunkEnterLeaveListener.class
 cyansfactions\commands\ClaimChunkCommand.class
 cyansfactions\commands\HelpCommand.class
 cyansfactions\listeners\ChunkProtectionListener.class
+cyansfactions\commands\DelWarpCommand.class
 cyansfactions\commands\UnclaimChunkCommand.class
 cyansfactions\CyansFactions.class
+cyansfactions\commands\HelpCommand2.class
 cyansfactions\commands\PeaceCommand.class
 cyansfactions\commands\HomeCommand.class
 cyansfactions\commands\SetWarpCommand.class
@@ -22,3 +24,4 @@ cyansfactions\commands\DisbandCommand.class
 cyansfactions\commands\CsfCommand$1.class
 cyansfactions\commands\SetHomeCommand.class
 cyansfactions\commands\LeaveFactionCommand.class
+cyansfactions\commands\ListWarpsCommand.class

@@ -8,9 +8,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import cyansfactions.commands.CreateFactionCommand;
 import cyansfactions.commands.CsfCommand;
+import cyansfactions.commands.DelWarpCommand;
 import cyansfactions.commands.HomeCommand;
 import cyansfactions.commands.InviteCommand;
 import cyansfactions.commands.LeaveFactionCommand;
+import cyansfactions.commands.ListWarpsCommand;
 import cyansfactions.commands.SetHomeCommand;
 import cyansfactions.listeners.ChatFormatListener;
 import cyansfactions.listeners.ChunkEnterLeaveListener;
@@ -32,7 +34,7 @@ public class CyansFactions extends JavaPlugin {
     private FactionsDataManager factionsDataManager;
     private HomeCommand homeCommand;
     private WarManager warManager;
-    private WarpCommand warpCommand;
+
 
     @Override
     public void onEnable() {
@@ -53,6 +55,11 @@ public class CyansFactions extends JavaPlugin {
         this.chunkManager = new ChunkManager();
         this.homeCommand = new HomeCommand(factionManager);
         this.warManager = new WarManager(factionManager);
+        WarpCommand warpCommand = new WarpCommand(factionManager, economy);
+        DelWarpCommand delWarpCommand = new DelWarpCommand(factionManager);
+        ListWarpsCommand listWarpsCommand = new ListWarpsCommand(factionManager);
+        CsfCommand csfCommand = new CsfCommand(factionManager, factionsDataManager, chunkManager, economy, homeCommand, warManager, warpCommand, delWarpCommand, listWarpsCommand);
+        getCommand("csf").setExecutor(csfCommand);
 
         factionsDataManager.loadFactions(factionManager, chunkManager);
         factionsDataManager.loadWars(warManager, factionManager);
@@ -90,7 +97,7 @@ public class CyansFactions extends JavaPlugin {
         }
 
         if (getCommand("csf") != null) {
-            getCommand("csf").setExecutor(new CsfCommand(factionManager, factionsDataManager, chunkManager, economy, homeCommand, warManager, warpCommand));
+            getCommand("csf").setExecutor(new CsfCommand(factionManager, factionsDataManager, chunkManager, economy, homeCommand, warManager, warpCommand, delWarpCommand, listWarpsCommand));
         }
     }
 

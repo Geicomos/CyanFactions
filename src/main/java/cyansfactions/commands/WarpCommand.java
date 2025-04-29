@@ -34,7 +34,7 @@ public class WarpCommand {
 
         Faction faction = factionManager.getFactionByPlayer(player);
         if (faction == null) {
-            player.sendMessage("§cYou are not in a faction.");
+            player.sendMessage("§3[CyansFactions]§r You are not in a faction.");
             return;
         }
 
@@ -42,14 +42,14 @@ public class WarpCommand {
         String enteredPassword = (args.length >= 3) ? args[2] : null;
 
         if (!faction.getWarps().containsKey(warpName)) {
-            player.sendMessage("§cWarp '" + warpName + "' does not exist.");
+            player.sendMessage("§3[CyansFactions]§r Warp '" + warpName + "' does not exist.");
             return;
         }
 
         String requiredPassword = faction.getWarpPassword(warpName);
         if (requiredPassword != null) {
             if (enteredPassword == null || !enteredPassword.equals(requiredPassword)) {
-                player.sendMessage("§cIncorrect password for warp '" + warpName + "'.");
+                player.sendMessage("§3[CyansFactions]§r Incorrect password for warp '" + warpName + "'.");
                 return;
             }
         }
@@ -60,13 +60,13 @@ public class WarpCommand {
             long nextAvailableTime = cooldowns.get(playerId);
             if (currentTime < nextAvailableTime) {
                 long secondsLeft = (nextAvailableTime - currentTime) / 1000;
-                player.sendMessage("§cYou must wait " + secondsLeft + " seconds before warping again.");
+                player.sendMessage("§3[CyansFactions]§r You must wait " + secondsLeft + " seconds before warping again.");
                 return;
             }
         }
 
         if (!economy.has(player, warpCost)) {
-            player.sendMessage("§cYou need $" + warpCost + " to warp.");
+            player.sendMessage("§3[CyansFactions]§r You need $" + warpCost + " to warp.");
             return;
         }
 
@@ -78,6 +78,6 @@ public class WarpCommand {
         // Set new cooldown
         cooldowns.put(playerId, currentTime + (warpCooldownSeconds * 1000));
 
-        player.sendMessage("§aWarped to '" + warpName + "' successfully!");
+        player.sendMessage("§3[CyansFactions]§r Warped to '" + warpName + "' successfully!");
     }
 }

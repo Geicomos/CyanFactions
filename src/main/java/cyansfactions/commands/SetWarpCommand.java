@@ -26,13 +26,13 @@ public class SetWarpCommand {
 
     public void execute(Player player, String[] args) {
         if (args.length < 2) {
-            player.sendMessage("§cUsage: /csf setwarp <name> [password]");
+            player.sendMessage("§3[CyansFactions]§r Usage: /csf setwarp <name> [password]");
             return;
         }
 
         Faction faction = factionManager.getFactionByPlayer(player);
         if (faction == null) {
-            player.sendMessage("§cYou are not in a faction.");
+            player.sendMessage("§3[CyansFactions]§r You are not in a faction.");
             return;
         }
 
@@ -40,12 +40,12 @@ public class SetWarpCommand {
         String password = args.length >= 3 ? args[2] : null; // Optional password
 
         if (faction.getWarps().size() >= warpMax) {
-            player.sendMessage("§cYour faction has reached the max number of warps (" + warpMax + ").");
+            player.sendMessage("§3[CyansFactions]§r Your faction has reached the max number of warps (" + warpMax + ").");
             return;
         }
 
-        if (!economy.has(player, warpCost)) {
-            player.sendMessage("§cYou need $" + warpCost + " to set a warp.");
+        if (!faction.withdraw(warpCost)) {
+            player.sendMessage("§3[CyansFactions]§r Your Faction needs $" + warpCost + " to set a warp.");
             return;
         }
 
@@ -66,6 +66,6 @@ public class SetWarpCommand {
             faction.setWarpPassword(warpName, password);
         }
 
-        player.sendMessage("§aWarp '" + warpName + "' has been set!" + (password != null ? " §7(Password protected)" : ""));
+        player.sendMessage("§3[CyansFactions]§r Warp '" + warpName + "' has been set!" + (password != null ? " §7(Password protected)" : ""));
     }
 }

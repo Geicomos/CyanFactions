@@ -1,13 +1,5 @@
 package cyansfactions.commands;
 
-import cyansfactions.managers.FactionManager;
-import cyansfactions.managers.WarManager;
-import cyansfactions.models.Faction;
-import cyansfactions.storage.FactionsDataManager;
-import net.milkbowl.vault.economy.Economy;
-import cyansfactions.managers.ChunkManager;
-import cyansfactions.CyansFactions;
-import org.bukkit.event.Listener;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -15,6 +7,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
+
+import cyansfactions.CyansFactions;
+import cyansfactions.managers.ChunkManager;
+import cyansfactions.managers.FactionManager;
+import cyansfactions.managers.WarManager;
+import cyansfactions.models.Faction;
+import cyansfactions.storage.FactionsDataManager;
+import net.milkbowl.vault.economy.Economy;
 
 public class CsfCommand implements CommandExecutor {
 
@@ -25,8 +26,10 @@ public class CsfCommand implements CommandExecutor {
     private final HomeCommand homeCommand;
     private final WarManager warManager; 
     private final WarpCommand warpCommand;
+    private final DelWarpCommand delWarpCommand;
+    private final ListWarpsCommand listWarpsCommand;
 
-    public CsfCommand(FactionManager factionManager, FactionsDataManager factionsDataManager, ChunkManager chunkManager, Economy economy, HomeCommand homeCommand, WarManager warManager, WarpCommand warpCommand) {
+    public CsfCommand(FactionManager factionManager, FactionsDataManager factionsDataManager, ChunkManager chunkManager, Economy economy, HomeCommand homeCommand, WarManager warManager, WarpCommand warpCommand, DelWarpCommand delWarpCommand, ListWarpsCommand listWarpsCommand) {
         this.factionManager = factionManager;
         this.chunkManager = chunkManager;
         this.economy = economy;
@@ -34,6 +37,8 @@ public class CsfCommand implements CommandExecutor {
         this.warManager = warManager;
         this.factionsDataManager = factionsDataManager; 
         this.warpCommand = warpCommand;
+        this.delWarpCommand = delWarpCommand;
+        this.listWarpsCommand = listWarpsCommand;
     }
     
 
@@ -54,6 +59,10 @@ public class CsfCommand implements CommandExecutor {
         switch (subcommand) {
             case "help":
                 new HelpCommand().onCommand(sender, command, label, args);
+            break;
+
+            case "help2":
+            new HelpCommand2().onCommand(sender, command, label, args);
             break;
 
             case "createfaction":
@@ -100,6 +109,14 @@ public class CsfCommand implements CommandExecutor {
                 warpCommand.execute(player, args);
                 break;
                 
+            case "delwarp":
+                delWarpCommand.execute(player, args);
+                break;
+
+            case "listwarps":
+                listWarpsCommand.execute(player, args);
+                break;
+    
             case "deposit":
                 if (args.length != 2) {
                     player.sendMessage("Usage: /csf deposit <amount>");
