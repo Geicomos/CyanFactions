@@ -1,23 +1,27 @@
 package cyansfactions;
 
 import net.milkbowl.vault.economy.Economy;
+
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import cyansfactions.commands.CreateFactionCommand;
 import cyansfactions.commands.CsfCommand;
-import cyansfactions.commands.FactionChatCommand;
 import cyansfactions.commands.HomeCommand;
 import cyansfactions.commands.InviteCommand;
 import cyansfactions.commands.LeaveFactionCommand;
 import cyansfactions.commands.SetHomeCommand;
+import cyansfactions.listeners.ChatFormatListener;
 import cyansfactions.listeners.ChunkEnterLeaveListener;
 import cyansfactions.listeners.ChunkProtectionListener;
 import cyansfactions.managers.ChunkManager;
 import cyansfactions.managers.FactionManager;
+import cyansfactions.managers.WarManager;
 import cyansfactions.storage.FactionsDataManager;
 import cyansfactions.commands.ClaimChunkCommand;
 import cyansfactions.commands.AcceptInviteCommand;
+import cyansfactions.commands.WarpCommand;
 
 public class CyansFactions extends JavaPlugin {
 
@@ -27,13 +31,15 @@ public class CyansFactions extends JavaPlugin {
     private ChunkManager chunkManager;
     private FactionsDataManager factionsDataManager;
     private HomeCommand homeCommand;
+    private WarManager warManager;
+    private WarpCommand warpCommand;
 
     @Override
     public void onEnable() {
         instance = this;
 
         saveDefaultConfig();
-        
+
         if (!setupEconomy()) {
             getLogger().severe("[CyansFactions] Vault not found or no economy provider found! Download Vault!");
             getServer().getPluginManager().disablePlugin(this);
@@ -46,12 +52,12 @@ public class CyansFactions extends JavaPlugin {
         this.factionManager = new FactionManager();
         this.chunkManager = new ChunkManager();
         this.homeCommand = new HomeCommand(factionManager);
-
-        FactionChatCommand factionChatCommand = new FactionChatCommand(factionManager);
-        getCommand("fchat").setExecutor(factionChatCommand);
-        getServer().getPluginManager().registerEvents(factionChatCommand, this);
+        this.warManager = new WarManager(factionManager);
 
         factionsDataManager.loadFactions(factionManager, chunkManager);
+        factionsDataManager.loadWars(warManager, factionManager);
+        Bukkit.getPluginManager().registerEvents(new ChatFormatListener(factionManager), this);
+
         // Register commands
         if (getCommand("createfaction") != null) {
             getCommand("createfaction").setExecutor(new CreateFactionCommand(factionManager, economy));
@@ -68,7 +74,7 @@ public class CyansFactions extends JavaPlugin {
 
         getLogger().info("[CyansFactions] enabled and Vault hooked successfully!");
         getServer().getPluginManager().registerEvents(new ChunkEnterLeaveListener(chunkManager), this);
-        getServer().getPluginManager().registerEvents(new ChunkProtectionListener(factionManager, chunkManager), this);
+        getServer().getPluginManager().registerEvents(new ChunkProtectionListener(chunkManager, warManager), this);
 
         if (getCommand("leavefaction") != null) {
             getCommand("leavefaction").setExecutor(new LeaveFactionCommand(factionManager));
@@ -84,15 +90,15 @@ public class CyansFactions extends JavaPlugin {
         }
 
         if (getCommand("csf") != null) {
-            getCommand("csf").setExecutor(new CsfCommand(factionManager, chunkManager, economy, homeCommand));
+            getCommand("csf").setExecutor(new CsfCommand(factionManager, factionsDataManager, chunkManager, economy, homeCommand, warManager, warpCommand));
         }
-
     }
 
     @Override
     public void onDisable() {
         if (factionsDataManager != null) {
             factionsDataManager.saveFactions(factionManager, chunkManager);
+            factionsDataManager.saveWars(warManager);
         }
 
         getLogger().info("[CyansFactions] disabled successfully!");
@@ -117,5 +123,6 @@ public class CyansFactions extends JavaPlugin {
     public static Economy getEconomy() {
         return economy;
     }
+
 
 }

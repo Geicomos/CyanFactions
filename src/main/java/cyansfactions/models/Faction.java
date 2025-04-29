@@ -1,7 +1,10 @@
 package cyansfactions.models;
 
 import org.bukkit.Location;
+
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -10,6 +13,8 @@ public class Faction {
     private final String name;
     private final UUID leader;
     private final Set<UUID> members = new HashSet<>();
+    private Map<String, Location> warps = new HashMap<>();
+    private Map<String, String> warpPasswords = new HashMap<>();
     private Location home;
     private double balance = 0.0; 
 
@@ -76,5 +81,33 @@ public class Faction {
             return true;
         }
         return false;
+    }
+
+    public Map<String, Location> getWarps() {
+        return warps;
+    }
+    
+    public void setWarp(String name, Location location) {
+        warps.put(name.toLowerCase(), location);
+    }
+    
+    public void removeWarp(String name) {
+        warps.remove(name.toLowerCase());
+    }
+
+    public Map<String, String> getWarpPasswords() {
+        return warpPasswords;
+    }
+    
+    public void setWarpPassword(String warpName, String password) {
+        warpPasswords.put(warpName.toLowerCase(), password);
+    }
+    
+    public String getWarpPassword(String warpName) {
+        return warpPasswords.get(warpName.toLowerCase());
+    }
+    
+    public void removeWarpPassword(String warpName) {
+        warpPasswords.remove(warpName.toLowerCase());
     }
 }

@@ -16,6 +16,7 @@ public class ClaimChunkCommand implements CommandExecutor {
     private final ChunkManager chunkManager;
     private final double baseClaimCost = CyansFactions.getInstance().getConfig().getDouble("claim.cost-to-claim", 600.0);
     private final double multiplyBy = CyansFactions.getInstance().getConfig().getDouble("claim.multiply-by", 2.0);
+    private final double chunkMax = CyansFactions.getInstance().getConfig().getDouble("claim.max-claims", 20.0);
 
     public ClaimChunkCommand(FactionManager factionManager, ChunkManager chunkManager) {
         this.factionManager = factionManager;
@@ -42,15 +43,18 @@ public class ClaimChunkCommand implements CommandExecutor {
         }
 
         Chunk chunk = player.getLocation().getChunk();
+        int claimedChunks = chunkManager.getClaimedChunks(faction).size();
 
-        // Check if already claimed
+        if (claimedChunks > chunkMax) {
+            player.sendMessage("§3[CyansFactions]§r You have hit the claim limit!");
+            return true;
+        }
+
         if (chunkManager.getFactionAt(chunk) != null) {
             player.sendMessage("§3[CyansFactions]§r This chunk is already claimed!");
             return true;
         }
 
-        // Calculate how much this claim costs
-        int claimedChunks = chunkManager.getClaimedChunks(faction).size(); // already claimed
         double claimCost = baseClaimCost * Math.pow(multiplyBy, claimedChunks); 
 
         // Check balance

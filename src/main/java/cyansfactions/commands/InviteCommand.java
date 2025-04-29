@@ -56,7 +56,7 @@ public class InviteCommand implements CommandExecutor {
 
         factionManager.invitePlayer(inviter, invitee);
         inviter.sendMessage("§3[CyansFactions]§r §aInvited " + invitee.getName() + " to your faction!");
-        invitee.sendMessage("§aYou have been invited to join " + faction.getName() + "! Use §b/csr acceptinvite§a to join.");
+        invitee.sendMessage("§aYou have been invited to join " + faction.getName() + "! Use §b/csf acceptinvite§a to join.");
         return true;
     }
 }

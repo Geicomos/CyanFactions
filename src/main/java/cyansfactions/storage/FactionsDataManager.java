@@ -2,6 +2,7 @@ package cyansfactions.storage;
 
 import cyansfactions.managers.ChunkManager;
 import cyansfactions.managers.FactionManager;
+import cyansfactions.managers.WarManager;
 import cyansfactions.models.Faction;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -133,6 +134,40 @@ public class FactionsDataManager {
             }
         }
     }
+    public void deleteFaction(String factionName) {
+        dataConfig.set("factions." + factionName, null);
+        saveData();
+    }
+    
+    public void saveWars(WarManager warManager) {
+        dataConfig.set("wars", null); // Clear old war data
+
+        for (Map.Entry<String, String> entry : warManager.getActiveWars().entrySet()) {
+            String factionName = entry.getKey();
+            String enemyName = entry.getValue();
+            dataConfig.set("wars." + factionName, enemyName);
+        }
+
+        saveData();
+    }
+
+    public void loadWars(WarManager warManager, FactionManager factionManager) {
+        if (!dataConfig.isConfigurationSection("wars")) {
+            return;
+        }
+
+        for (String factionName : dataConfig.getConfigurationSection("wars").getKeys(false)) {
+            String enemyName = dataConfig.getString("wars." + factionName);
+
+            Faction faction = factionManager.getFactionByName(factionName);
+            Faction enemy = factionManager.getFactionByName(enemyName);
+
+            if (faction != null && enemy != null) {
+                warManager.declareWar(faction, enemy);
+            }
+        }
+    }
+
 
     private void saveData() {
         try {

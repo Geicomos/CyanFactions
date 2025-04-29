@@ -17,4 +17,4 @@ warp:
   cost-to-set: 100.0 # How much it costs to set a warp
   cost-to-use: 50.0 # How much it costs to warp
   cooldown-seconds: 30 # Cooldown between warping (seconds)
-  max-warps: 5 # Max number of warps per faction
+  max: 5 # Max number of warps per faction

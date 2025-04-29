@@ -1,6 +1,9 @@
 package cyansfactions.managers;
 
 import cyansfactions.models.Faction;
+import cyansfactions.storage.FactionsDataManager;
+
+import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -75,5 +78,44 @@ public class FactionManager {
             playerFactions.put(member, faction.getName().toLowerCase());
         }
     }
+    
+    public void deleteFaction(Faction faction, ChunkManager chunkManager, FactionsDataManager factionsDataManager) {
+        // Unclaim all chunks
+        for (Chunk chunk : chunkManager.getClaimedChunks(faction)) {
+            chunkManager.unclaimChunk(chunk);
+        }
+    
+        // Remove faction from memory
+        factions.remove(faction.getName().toLowerCase());
+    
+        // Remove players from memory
+        for (UUID member : faction.getMembers()) {
+            playerFactions.remove(member);
+        }
+    
+        // Remove from file
+        if (factionsDataManager != null) {
+            factionsDataManager.deleteFaction(faction.getName());
+        }
+    }    
+        
+    public Faction getFactionByName(String name) {
+        for (Faction faction : getAllFactions()) {
+            if (faction.getName().equalsIgnoreCase(name)) {
+                return faction;
+            }
+        }
+        return null;
+    }    
+    
+    public Faction getFactionByUUID(UUID uuid) {
+        for (Faction faction : factions.values()) {
+            if (faction.hasMember(uuid)) {
+                return faction;
+            }
+        }
+        return null;
+    }
+    
     
 }
