@@ -16,7 +16,7 @@ public class HelpCommand implements CommandExecutor {
         sender.sendMessage("§3/csf sethome §7- Set your faction's home (leader only)");
         sender.sendMessage("§3/csf deposit §7- Deposit money into your faction bank");
         sender.sendMessage("§3/csf withdraw §7- Withdraw money from your faction bank");
-        sender.sendMessage("§3/csf balance §7- Check your faciton balance");
+        sender.sendMessage("§3/csf balance §7- Check your faction balance");
         sender.sendMessage("§3/csf help2 §7- Show the second help page");
         return true;
     }

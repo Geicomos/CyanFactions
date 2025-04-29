@@ -15,7 +15,7 @@ public class HelpCommand2 implements CommandExecutor {
         sender.sendMessage("§3/csf disband §7- Disband your current faction all together");
         sender.sendMessage("§3/csf war §7- Declares war on a faction, allows greifing");
         sender.sendMessage("§3/csf peace §7- Removes war from both factions");
-        sender.sendMessage("§3/csf warp <name> <password> §7- Warp to all faction warps or ally warps");
+        sender.sendMessage("§3/csf warp <name> <password> §7- Warp to a setwarp");
         sender.sendMessage("§3/csf setwarp <password> §7- Sets a warp");
         sender.sendMessage("§3/csf help3 §7- Shows you the third help page");
         return true;

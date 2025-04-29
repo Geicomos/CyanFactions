@@ -59,11 +59,15 @@ public class CsfCommand implements CommandExecutor {
         switch (subcommand) {
             case "help":
                 new HelpCommand().onCommand(sender, command, label, args);
-            break;
+                break;
 
             case "help2":
-            new HelpCommand2().onCommand(sender, command, label, args);
-            break;
+                new HelpCommand2().onCommand(sender, command, label, args);
+                break;
+
+            case "help3":
+                new HelpCommand3().onCommand(sender, command, label, args);
+                break;
 
             case "createfaction":
                 new CreateFactionCommand(factionManager, CyansFactions.getEconomy()).onCommand(sender, command, label, new String[]{args[1]});
