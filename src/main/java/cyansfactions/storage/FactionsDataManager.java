@@ -46,20 +46,16 @@ public class FactionsDataManager {
         for (Faction faction : factionManager.getAllFactions()) {
             String path = "factions." + faction.getName();
 
-            // Save leader
             dataConfig.set(path + ".leader", faction.getLeader().toString());
-
-            // Save balance
             dataConfig.set(path + ".balance", faction.getBalance());
+            dataConfig.set(path + ".allies", new ArrayList<>(faction.getAllies()));
 
-            // Save members
             List<String> members = new ArrayList<>();
             for (UUID member : faction.getMembers()) {
                 members.add(member.toString());
             }
             dataConfig.set(path + ".members", members);
 
-            // Save claimed chunks
             List<String> claimedChunks = new ArrayList<>();
             for (Chunk chunk : chunkManager.getClaimedChunks(faction)) {
                 String chunkKey = chunk.getWorld().getName() + "," + chunk.getX() + "," + chunk.getZ();
@@ -77,6 +73,26 @@ public class FactionsDataManager {
                 dataConfig.set(path + ".home.yaw", home.getYaw());
                 dataConfig.set(path + ".home.pitch", home.getPitch());
             }
+        
+            for (Map.Entry<String, Location> entry : faction.getWarps().entrySet()) {
+                String warpName = entry.getKey();
+                Location loc = entry.getValue();
+            
+                String warpPath = path + ".warps." + warpName;
+                dataConfig.set(warpPath + ".world", loc.getWorld().getName());
+                dataConfig.set(warpPath + ".x", loc.getX());
+                dataConfig.set(warpPath + ".y", loc.getY());
+                dataConfig.set(warpPath + ".z", loc.getZ());
+                dataConfig.set(warpPath + ".yaw", loc.getYaw());
+                dataConfig.set(warpPath + ".pitch", loc.getPitch());
+            
+                // 🔥 Save the warp password if it exists
+                String password = faction.getWarpPassword(warpName);
+                if (password != null) {
+                    dataConfig.set(warpPath + ".password", password);
+                }
+            }
+            
         }
 
         saveData();
@@ -132,6 +148,40 @@ public class FactionsDataManager {
                     faction.setHome(home);
                 }
             }
+
+            if (dataConfig.contains(path + ".warps")) {
+                Set<String> warpKeys = dataConfig.getConfigurationSection(path + ".warps").getKeys(false);
+            
+                for (String warpName : warpKeys) {
+                    String warpPath = path + ".warps." + warpName;
+            
+                    String worldName = dataConfig.getString(warpPath + ".world");
+                    World world = Bukkit.getWorld(worldName);
+            
+                    if (world != null) {
+                        double x = dataConfig.getDouble(warpPath + ".x");
+                        double y = dataConfig.getDouble(warpPath + ".y");
+                        double z = dataConfig.getDouble(warpPath + ".z");
+                        float yaw = (float) dataConfig.getDouble(warpPath + ".yaw");
+                        float pitch = (float) dataConfig.getDouble(warpPath + ".pitch");
+            
+                        Location warpLoc = new Location(world, x, y, z, yaw, pitch);
+                        faction.setWarp(warpName, warpLoc);
+            
+                        // 🔥 Load the password if it exists
+                        if (dataConfig.contains(warpPath + ".password")) {
+                            String password = dataConfig.getString(warpPath + ".password");
+                            faction.setWarpPassword(warpName, password);
+                        }
+                    }
+                }
+            }
+            
+            List<String> allies = dataConfig.getStringList(path + ".allies");
+            for (String allyName : allies) {
+                faction.addAlly(allyName);
+            }
+
         }
     }
     public void deleteFaction(String factionName) {

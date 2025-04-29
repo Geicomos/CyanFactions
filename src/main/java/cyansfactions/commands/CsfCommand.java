@@ -190,7 +190,7 @@ public class CsfCommand implements CommandExecutor {
                 }
                 break;
 
-                case "war":
+            case "war":
                     if (args.length != 2) {
                         player.sendMessage("§3[CyansFactions]§r Usage: /csf war <targetFaction>");
                         return true;
@@ -227,7 +227,7 @@ public class CsfCommand implements CommandExecutor {
                     Bukkit.broadcastMessage("§3[CyansFactions] §c" + yourFaction.getName() + " has declared WAR on " + targetFaction.getName() + "!");
                     break;
 
-                case "peace":
+            case "peace":
                     if (args.length != 2) {
                         player.sendMessage("§3[CyansFactions]§r Usage: /csf peace <targetFaction>");
                         return true;
@@ -284,40 +284,182 @@ public class CsfCommand implements CommandExecutor {
                         }, CyansFactions.getInstance());                    }
                     break;                    
 
-                    case "acceptpeace":
-                        if (args.length != 2) {
-                            player.sendMessage("§3[CyansFactions]§r Usage: /csf acceptpeace <faction>");
-                            return true;
-                        }
+            case "acceptpeace":
+                    if (args.length != 2) {
+                        player.sendMessage("§3[CyansFactions]§r Usage: /csf acceptpeace <faction>");
+                        return true;
+                    }
 
-                        if (!factionManager.hasFaction(player)) {
-                            player.sendMessage("§3[CyansFactions]§r You are not in a faction!");
-                            return true;
-                        }
+                    if (!factionManager.hasFaction(player)) {
+                        player.sendMessage("§3[CyansFactions]§r You are not in a faction!");
+                        return true;
+                    }
 
-                        Faction myFaction = factionManager.getFactionByPlayer(player);
-                        if (!myFaction.getLeader().equals(player.getUniqueId())) {
-                            player.sendMessage("§3[CyansFactions]§r Only faction leaders can accept peace offers!");
-                            return true;
-                        }
+                    Faction myFaction = factionManager.getFactionByPlayer(player);
+                    if (!myFaction.getLeader().equals(player.getUniqueId())) {
+                        player.sendMessage("§3[CyansFactions]§r Only faction leaders can accept peace offers!");
+                        return true;
+                    }
 
-                        Faction requestedFaction = factionManager.getFactionByName(args[1]);
-                        if (requestedFaction == null) {
-                            player.sendMessage("§3[CyansFactions]§r That faction doesn't exist.");
-                            return true;
-                        }
+                    Faction requestedFaction = factionManager.getFactionByName(args[1]);
+                    if (requestedFaction == null) {
+                        player.sendMessage("§3[CyansFactions]§r That faction doesn't exist.");
+                        return true;
+                    }
 
-                        if (!warManager.hasPendingPeace(myFaction.getName(), requestedFaction.getName())) {
+                    if (!warManager.hasPendingPeace(myFaction.getName(), requestedFaction.getName())) {
                         player.sendMessage("§3[CyansFactions]§r There is no pending peace offer from " + requestedFaction.getName() + ".");
-                            return true;
-                        }
+                        return true;
+                    }
                         
-                        warManager.endWar(myFaction, requestedFaction);
-                        warManager.removePendingPeace(requestedFaction.getName(), myFaction.getName());                        
+                    warManager.endWar(myFaction, requestedFaction);
+                    warManager.removePendingPeace(requestedFaction.getName(), myFaction.getName());                        
 
-                        Bukkit.broadcastMessage("§3[CyansFactions] §a" + myFaction.getName() + " and " + requestedFaction.getName() + " have made peace!");
-                        break;
+                    Bukkit.broadcastMessage("§3[CyansFactions] §a" + myFaction.getName() + " and " + requestedFaction.getName() + " have made peace!");
+                    break;
 
+            case "ally":
+                    if (args.length != 2) {
+                        player.sendMessage("§3[CyansFactions]§r Usage: /csf ally <faction>");
+                        return true;
+                    }
+                
+                    if (!factionManager.hasFaction(player)) {
+                        player.sendMessage("§3[CyansFactions]§r You are not in a faction!");
+                        return true;
+                    }
+                
+                    Faction senderFaction = factionManager.getFactionByPlayer(player);
+                    if (!senderFaction.getLeader().equals(player.getUniqueId())) {
+                        player.sendMessage("§3[CyansFactions]§r Only faction leaders can form alliances.");
+                        return true;
+                    }
+                
+                    Faction targetFaction2 = factionManager.getFactionByName(args[1]);
+                    if (targetFaction2 == null) {
+                        player.sendMessage("§3[CyansFactions]§r That faction doesn't exist.");
+                        return true;
+                    }
+                
+                    if (senderFaction.getName().equalsIgnoreCase(targetFaction2.getName())) {
+                        player.sendMessage("§3[CyansFactions]§r You can't ally with your own faction.");
+                        return true;
+                    }
+                
+                    if (warManager.areFactionsAtWar(senderFaction, targetFaction2)) {
+                        player.sendMessage("§3[CyansFactions]§r You cannot ally with a faction you're at war with.");
+                        return true;
+                    }
+                
+                    if (senderFaction.isAlliedWith(targetFaction2.getName())) {
+                        player.sendMessage("§3[CyansFactions]§r You are already allied with " + targetFaction2.getName() + ".");
+                        return true;
+                    }
+                                
+                    UUID targetLeaderUUID = targetFaction2.getLeader();
+                    Player targetLeader = Bukkit.getPlayer(targetLeaderUUID);
+                
+                    if (targetLeader != null && targetLeader.isOnline()) {
+                        targetLeader.sendMessage("§3[CyansFactions]§r §a" + senderFaction.getName() + " wants to ally with your faction.");
+                        targetLeader.sendMessage("§3[CyansFactions]§r §aType /csf acceptally " + senderFaction.getName() + " to accept.");
+                        player.sendMessage("§3[CyansFactions]§r §aAlly request sent. Waiting for response.");
+                        factionManager.addPendingAlly(targetFaction2.getName(), senderFaction.getName());
+                    } else {
+                        player.sendMessage("§3[CyansFactions]§r §aAlly request sent. Will notify the enemy leader when they come online.");
+                        CyansFactions.getInstance().getServer().getPluginManager().registerEvents(new Listener() {
+                            @org.bukkit.event.EventHandler
+                            public void onJoin(org.bukkit.event.player.PlayerJoinEvent event) {
+                                Player joined = event.getPlayer();
+                                if (joined.getUniqueId().equals(targetLeaderUUID)) {
+                                    joined.sendMessage("§3[CyansFactions]§r §a" + senderFaction.getName() + " wants to ally with your faction.");
+                                    joined.sendMessage("§3[CyansFactions]§r §aType /csf acceptally " + senderFaction.getName() + " to accept.");
+                                    factionManager.addPendingAlly(targetFaction2.getName(), senderFaction.getName());
+                                    org.bukkit.event.HandlerList.unregisterAll(this);
+                                }
+                            }
+                        }, CyansFactions.getInstance());
+                    }
+                
+                    break;
+
+            case "unally":
+                if (args.length != 2) {
+                    player.sendMessage("§3[CyansFactions]§r Usage: /csf unally <faction>");
+                    return true;
+                }
+            
+                if (!factionManager.hasFaction(player)) {
+                    player.sendMessage("§3[CyansFactions]§r You are not in a faction!");
+                    return true;
+                }
+            
+                Faction playerFactionUnally = factionManager.getFactionByPlayer(player);
+                if (!playerFactionUnally.getLeader().equals(player.getUniqueId())) {
+                    player.sendMessage("§3[CyansFactions]§r Only faction leaders can remove alliances.");
+                    return true;
+                }
+            
+                Faction targetFactionUnally = factionManager.getFactionByName(args[1]);
+                if (targetFactionUnally == null) {
+                    player.sendMessage("§3[CyansFactions]§r That faction doesn't exist.");
+                    return true;
+                }
+            
+                if (!playerFactionUnally.isAlliedWith(targetFactionUnally.getName())) {
+                    player.sendMessage("§3[CyansFactions]§r You are not allied with " + targetFactionUnally.getName() + ".");
+                    return true;
+                }
+            
+                playerFactionUnally.removeAlly(targetFactionUnally.getName());
+                targetFactionUnally.removeAlly(playerFactionUnally.getName());
+            
+                player.sendMessage("§3[CyansFactions]§r You have unallied with " + targetFactionUnally.getName() + ".");
+                Player unalliedLeader = Bukkit.getPlayer(targetFactionUnally.getLeader());
+                if (unalliedLeader != null) {
+                    unalliedLeader.sendMessage("§3[CyansFactions]§r " + playerFactionUnally.getName() + " has unallied your faction.");
+                }
+                break;
+            
+        case "acceptally":
+            if (args.length != 2) {
+                player.sendMessage("§3[CyansFactions]§r Usage: /csf acceptally <faction>");
+                return true;
+            }
+
+            if (!factionManager.hasFaction(player)) {
+                player.sendMessage("§3[CyansFactions]§r You are not in a faction!");
+                return true;
+            }
+
+            Faction myFaction2 = factionManager.getFactionByPlayer(player);
+            if (!myFaction2.getLeader().equals(player.getUniqueId())) {
+                player.sendMessage("§3[CyansFactions]§r Only faction leaders can accept alliance requests.");
+                return true;
+            }
+
+            String senderFactionName = args[1];
+            Faction senderFaction2 = factionManager.getFactionByName(senderFactionName);
+            if (senderFaction2 == null) {
+                player.sendMessage("§3[CyansFactions]§r That faction doesn't exist.");
+                return true;
+            }
+
+            if (!factionManager.hasPendingAlly(myFaction2.getName(), senderFaction2.getName())) {
+                player.sendMessage("§3[CyansFactions]§r No pending alliance request from " + senderFaction2.getName() + ".");
+                return true;
+            }
+
+            senderFaction2.addAlly(myFaction2.getName());
+            myFaction2.addAlly(senderFaction2.getName());
+            factionManager.removePendingAlly(myFaction2.getName());
+
+            player.sendMessage("§3[CyansFactions]§r §aAlliance formed with " + senderFaction2.getName() + "!");
+            Player senderLeader = Bukkit.getPlayer(senderFaction2.getLeader());
+            if (senderLeader != null) {
+                senderLeader.sendMessage("§3[CyansFactions]§r §a" + myFaction2.getName() + " has accepted your alliance request!");
+            }
+            break;
+    
 
             default:
                 player.sendMessage("§3[CyansFactions]§r Unknown Command, see commands at /csf help");

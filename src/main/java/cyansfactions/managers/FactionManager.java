@@ -13,6 +13,7 @@ public class FactionManager {
     private final Map<String, Faction> factions = new HashMap<>();
     private final Map<UUID, String> playerFactions = new HashMap<>();
     private final Map<UUID, String> invites = new HashMap<>();
+    private final Map<String, String> pendingAllyRequests = new HashMap<>();
 
     public boolean createFaction(Player creator, String name) {
         if (factions.containsKey(name.toLowerCase())) {
@@ -117,5 +118,16 @@ public class FactionManager {
         return null;
     }
     
+    public void addPendingAlly(String targetFaction, String senderFaction) {
+        pendingAllyRequests.put(targetFaction.toLowerCase(), senderFaction.toLowerCase());
+    }
+    
+    public boolean hasPendingAlly(String targetFaction, String senderFaction) {
+        return senderFaction.equalsIgnoreCase(pendingAllyRequests.getOrDefault(targetFaction.toLowerCase(), ""));
+    }
+    
+    public void removePendingAlly(String targetFaction) {
+        pendingAllyRequests.remove(targetFaction.toLowerCase());
+    }
     
 }

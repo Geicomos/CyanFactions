@@ -20,14 +20,14 @@ public class DelWarpCommand {
 
         Faction faction = factionManager.getFactionByPlayer(player);
         if (faction == null) {
-            player.sendMessage("§cYou are not in a faction.");
+            player.sendMessage("§3[CyansFactions]§r You are not in a faction.");
             return;
         }
 
         String warpName = args[1].toLowerCase();
 
         if (!faction.getWarps().containsKey(warpName)) {
-            player.sendMessage("§cWarp '" + warpName + "' does not exist.");
+            player.sendMessage("§3[CyansFactions]§r Warp '" + warpName + "' does not exist.");
             return;
         }
 
@@ -35,6 +35,6 @@ public class DelWarpCommand {
         faction.getWarps().remove(warpName);
         faction.getWarpPasswords().remove(warpName);
 
-        player.sendMessage("§aWarp '" + warpName + "' has been deleted!");
+        player.sendMessage("§3[CyansFactions]§r Warp '" + warpName + "' has been deleted!");
     }
 }

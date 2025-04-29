@@ -2,6 +2,7 @@ package cyansfactions.models;
 
 import org.bukkit.Location;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,6 +16,8 @@ public class Faction {
     private final Set<UUID> members = new HashSet<>();
     private Map<String, Location> warps = new HashMap<>();
     private Map<String, String> warpPasswords = new HashMap<>();
+    private final Set<String> allies = new HashSet<>();
+    private final Map<String, String> pendingAllyRequests = new HashMap<>();
     private Location home;
     private double balance = 0.0; 
 
@@ -110,4 +113,32 @@ public class Faction {
     public void removeWarpPassword(String warpName) {
         warpPasswords.remove(warpName.toLowerCase());
     }
+    public void addAlly(String factionName) {
+    allies.add(factionName.toLowerCase());
+    }
+
+    public void removeAlly(String factionName) {
+        allies.remove(factionName.toLowerCase());
+    }
+
+    public boolean isAlliedWith(String factionName) {
+        return allies.contains(factionName.toLowerCase());
+    }
+
+    public Set<String> getAllies() {
+        return Collections.unmodifiableSet(allies);
+    }
+
+    public void addPendingAlly(String targetFaction, String senderFaction) {
+        pendingAllyRequests.put(targetFaction.toLowerCase(), senderFaction.toLowerCase());
+    }
+    
+    public boolean hasPendingAlly(String targetFaction, String senderFaction) {
+        return pendingAllyRequests.getOrDefault(targetFaction.toLowerCase(), "").equalsIgnoreCase(senderFaction);
+    }
+    
+    public void removePendingAlly(String targetFaction) {
+        pendingAllyRequests.remove(targetFaction.toLowerCase());
+    }
+    
 }
