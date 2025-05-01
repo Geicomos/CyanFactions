@@ -5,7 +5,6 @@ C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\Lea
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\CreateFactionCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\managers\WarManager.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\CyansFactions.java
-C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\listeners\ChatFormatListener.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\DelWarpCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\SetHomeCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\PromoteCommand.java
@@ -16,15 +15,18 @@ C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\Inv
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\DemoteCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\SetWarpCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\ClaimChunkCommand.java
+C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\listeners\FactionsChatListener.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\HelpCommand2.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\DisbandCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\ListCommand.java
+C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\FactionChatToggleCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\UnclaimChunkCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\HelpCommand3.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\ListWarpsCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\listeners\ChunkProtectionListener.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\HomeCommand.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\managers\ChunkManager.java
+C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\managers\ChatManager.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\models\Faction.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\storage\FactionsDataManager.java
 C:\Users\Geicomo\Downloads\CyanFactions\src\main\java\cyansfactions\commands\WarpCommand.java

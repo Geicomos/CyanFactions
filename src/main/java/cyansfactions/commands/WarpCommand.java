@@ -19,7 +19,6 @@ public class WarpCommand {
     private final int warpCooldownSeconds = CyansFactions.getInstance().getConfig().getInt("warp.cooldown-seconds", 120);
     private final int pvpCooldown = CyansFactions.getInstance().getConfig().getInt("warp.pvp-cooldown", 30);
 
-    // Track cooldowns: Player UUID -> timestamp of when they can warp again
     private final Map<UUID, Long> cooldowns = new HashMap<>();
     private final Map<UUID, Long> lastCombat = new HashMap<>(); 
     public Map<UUID, Long> getLastCombatMap() {
@@ -46,7 +45,6 @@ public class WarpCommand {
         String input = args[1].toLowerCase();
         String enteredPassword = (args.length >= 3) ? args[2] : null;
     
-        // Determine target faction and warp name
         String targetFactionName;
         String warpName;
     
@@ -127,7 +125,7 @@ public class WarpCommand {
         player.teleport(warps.get(warpName));
         cooldowns.put(playerId, currentTime + (warpCooldownSeconds * 1000));
     
-        player.sendMessage("§3[CyansFactions]§r Warped to '" + warpName + "' in " + targetFaction.getName() + "!");
+        player.sendMessage("§3[CyansFactions]§r §aWarped to '" + warpName + "' in " + targetFaction.getName() + "!");
     }    
     
 }

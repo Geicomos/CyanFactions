@@ -42,6 +42,10 @@ public class Faction {
         return members;
     }
 
+    public boolean isMember(UUID uuid) {
+        return members.contains(uuid);
+    }    
+
     public Set<Chunk> getClaimedChunks() {
         return claimedChunks;
     }

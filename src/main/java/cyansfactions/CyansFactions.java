@@ -2,7 +2,6 @@ package cyansfactions;
 
 import net.milkbowl.vault.economy.Economy;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,10 +13,11 @@ import cyansfactions.commands.InviteCommand;
 import cyansfactions.commands.LeaveFactionCommand;
 import cyansfactions.commands.ListWarpsCommand;
 import cyansfactions.commands.SetHomeCommand;
-import cyansfactions.listeners.ChatFormatListener;
 import cyansfactions.listeners.ChunkEnterLeaveListener;
 import cyansfactions.listeners.ChunkProtectionListener;
 import cyansfactions.listeners.CombatListener;
+import cyansfactions.listeners.FactionsChatListener;
+import cyansfactions.managers.ChatManager;
 import cyansfactions.managers.ChunkManager;
 import cyansfactions.managers.FactionManager;
 import cyansfactions.managers.WarManager;
@@ -56,17 +56,21 @@ public class CyansFactions extends JavaPlugin {
         this.chunkManager = new ChunkManager(this, factionManager); // 🔥 passing plugin + factionManager        
         this.homeCommand = new HomeCommand(factionManager);
         this.warManager = new WarManager(factionManager);
-        WarpCommand warpCommand = new WarpCommand(factionManager, economy);
-        getServer().getPluginManager().registerEvents(new CombatListener(warpCommand.getLastCombatMap()), this);
 
+        ChatManager chatManager = new ChatManager();
+        WarpCommand warpCommand = new WarpCommand(factionManager, economy);
         DelWarpCommand delWarpCommand = new DelWarpCommand(factionManager);
         ListWarpsCommand listWarpsCommand = new ListWarpsCommand(factionManager);
-        CsfCommand csfCommand = new CsfCommand(factionManager, factionsDataManager, chunkManager, economy, homeCommand, warManager, warpCommand, delWarpCommand, listWarpsCommand);
+        CsfCommand csfCommand = new CsfCommand(factionManager, factionsDataManager, chunkManager, economy, homeCommand, warManager, warpCommand, delWarpCommand, listWarpsCommand, chatManager);
         getCommand("csf").setExecutor(csfCommand);
+        getServer().getPluginManager().registerEvents(new CombatListener(warpCommand.getLastCombatMap()), this);
+        getServer().getPluginManager().registerEvents(new CombatListener(homeCommand.getLastCombatMap()), this);
+        getServer().getPluginManager().registerEvents(
+            new FactionsChatListener(factionManager, chatManager), this
+        );
 
         factionsDataManager.loadFactions(factionManager, chunkManager);
         factionsDataManager.loadWars(warManager, factionManager);
-        Bukkit.getPluginManager().registerEvents(new ChatFormatListener(factionManager), this);
 
         // Register commands
         if (getCommand("createfaction") != null) {
@@ -100,7 +104,7 @@ public class CyansFactions extends JavaPlugin {
         }
 
         if (getCommand("csf") != null) {
-            getCommand("csf").setExecutor(new CsfCommand(factionManager, factionsDataManager, chunkManager, economy, homeCommand, warManager, warpCommand, delWarpCommand, listWarpsCommand));
+            getCommand("csf").setExecutor(new CsfCommand(factionManager, factionsDataManager, chunkManager, economy, homeCommand, warManager, warpCommand, delWarpCommand, listWarpsCommand, chatManager));
         }
     }
 

@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 
 import cyansfactions.CyansFactions;
+import cyansfactions.managers.ChatManager;
 import cyansfactions.managers.ChunkManager;
 import cyansfactions.managers.FactionManager;
 import cyansfactions.managers.WarManager;
@@ -28,8 +29,9 @@ public class CsfCommand implements CommandExecutor {
     private final WarpCommand warpCommand;
     private final DelWarpCommand delWarpCommand;
     private final ListWarpsCommand listWarpsCommand;
+    private final ChatManager chatManager;
 
-    public CsfCommand(FactionManager factionManager, FactionsDataManager factionsDataManager, ChunkManager chunkManager, Economy economy, HomeCommand homeCommand, WarManager warManager, WarpCommand warpCommand, DelWarpCommand delWarpCommand, ListWarpsCommand listWarpsCommand) {
+    public CsfCommand(FactionManager factionManager, FactionsDataManager factionsDataManager, ChunkManager chunkManager, Economy economy, HomeCommand homeCommand, WarManager warManager, WarpCommand warpCommand, DelWarpCommand delWarpCommand, ListWarpsCommand listWarpsCommand, ChatManager chatManager) {
         this.factionManager = factionManager;
         this.chunkManager = chunkManager;
         this.economy = economy;
@@ -39,6 +41,7 @@ public class CsfCommand implements CommandExecutor {
         this.warpCommand = warpCommand;
         this.delWarpCommand = delWarpCommand;
         this.listWarpsCommand = listWarpsCommand;
+        this.chatManager = chatManager;
     }
     
 
@@ -69,10 +72,18 @@ public class CsfCommand implements CommandExecutor {
                 new HelpCommand3().onCommand(sender, command, label, args);
                 break;
 
+            case "help4":
+                new HelpCommand4().onCommand(sender, command, label, args);
+                break;
+
             case "createfaction":
                 new CreateFactionCommand(factionManager, CyansFactions.getEconomy()).onCommand(sender, command, label, new String[]{args[1]});
                 break;
 
+            case "factionchat":
+                new FactionChatToggleCommand(chatManager).onCommand(sender, command, label, args);
+                break;
+                
             case "invite":
                 new InviteCommand(factionManager).onCommand(sender, command, label, new String[]{args[1]});
                 break;
@@ -80,7 +91,6 @@ public class CsfCommand implements CommandExecutor {
             case "list":
                 new ListCommand(factionManager, chunkManager).onCommand(sender, command, label, args);
                 break;
-
 
             case "acceptinvite":
                 new AcceptInviteCommand(factionManager).onCommand(sender, command, label, new String[]{});
