@@ -4,10 +4,13 @@ import cyansfactions.managers.ChunkManager;
 import cyansfactions.managers.FactionManager;
 import cyansfactions.managers.WarManager;
 import cyansfactions.models.Faction;
+import cyansfactions.models.FactionRole;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -21,6 +24,7 @@ public class FactionsDataManager {
     private final Plugin plugin;
     private File dataFile;
     private FileConfiguration dataConfig;
+    Map<String, String> roleMap = new HashMap<>();
 
     public FactionsDataManager(Plugin plugin) {
         this.plugin = plugin;
@@ -73,7 +77,13 @@ public class FactionsDataManager {
                 dataConfig.set(path + ".home.yaw", home.getYaw());
                 dataConfig.set(path + ".home.pitch", home.getPitch());
             }
-        
+
+            for (UUID uuid : faction.getMembers()) {
+                FactionRole role = faction.getRole(uuid);
+                roleMap.put(uuid.toString(), role.name());
+            }
+                dataConfig.set(path + ".roles", roleMap);
+
             for (Map.Entry<String, Location> entry : faction.getWarps().entrySet()) {
                 String warpName = entry.getKey();
                 Location loc = entry.getValue();
@@ -146,6 +156,20 @@ public class FactionsDataManager {
 
                     Location home = new Location(world, x, y, z, yaw, pitch);
                     faction.setHome(home);
+                }
+            }
+
+            // Load roles
+            if (dataConfig.contains(path + ".roles")) {
+                ConfigurationSection section = dataConfig.getConfigurationSection(path + ".roles");
+                for (String uuidStr : section.getKeys(false)) {
+                    try {
+                        UUID uuid = UUID.fromString(uuidStr);
+                        FactionRole role = FactionRole.valueOf(section.getString(uuidStr));
+                        faction.setRole(uuid, role);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

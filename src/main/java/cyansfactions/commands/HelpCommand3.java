@@ -14,6 +14,8 @@ public class HelpCommand3 implements CommandExecutor {
         sender.sendMessage("§3/csf ally <faction> §7- Ally with another faction");
         sender.sendMessage("§3/csf acceptally <faction> §7- Accept invite to ally");
         sender.sendMessage("§3/csf unally <faction> §7- Unally with a faction");
+        sender.sendMessage("§3/csf promote <faction> §7- Promote a member to co-leader");
+        sender.sendMessage("§3/csf demote <faction> §7- Demote a co-leader");
         return true;
     }
 }

@@ -12,7 +12,9 @@ import java.util.Map;
 public class ChunkManager {
 
     private final Map<String, Faction> claimedChunks = new HashMap<>();
+    @SuppressWarnings("unused")
     private final CyansFactions plugin;
+    @SuppressWarnings("unused")
     private final FactionManager factionManager;
 
     public ChunkManager(CyansFactions plugin, FactionManager factionManager) {

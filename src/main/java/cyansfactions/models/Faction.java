@@ -1,5 +1,6 @@
 package cyansfactions.models;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 
 import java.util.Collections;
@@ -16,8 +17,10 @@ public class Faction {
     private final Set<UUID> members = new HashSet<>();
     private Map<String, Location> warps = new HashMap<>();
     private Map<String, String> warpPasswords = new HashMap<>();
+    private final Map<UUID, FactionRole> roles = new HashMap<>();
     private final Set<String> allies = new HashSet<>();
     private final Map<String, String> pendingAllyRequests = new HashMap<>();
+    private final Set<Chunk> claimedChunks = new HashSet<>();
     private Location home;
     private double balance = 0.0; 
     
@@ -39,8 +42,25 @@ public class Faction {
         return members;
     }
 
-    public void addMember(UUID uuid) {
-        members.add(uuid);
+    public Set<Chunk> getClaimedChunks() {
+        return claimedChunks;
+    }
+    
+    public boolean claimChunk(Chunk chunk) {
+        return claimedChunks.add(chunk);
+    }
+    
+    public boolean unclaimChunk(Chunk chunk) {
+        return claimedChunks.remove(chunk);
+    }
+    
+    public boolean isChunkClaimed(Chunk chunk) {
+        return claimedChunks.contains(chunk);
+    }    
+
+    public void addMember(UUID playerUUID) {
+        members.add(playerUUID);
+        roles.putIfAbsent(playerUUID, FactionRole.MEMBER); 
     }
 
     public void removeMember(UUID uuid) {
@@ -139,6 +159,25 @@ public class Faction {
     
     public void removePendingAlly(String targetFaction) {
         pendingAllyRequests.remove(targetFaction.toLowerCase());
+    }
+ 
+    public void setRole(UUID playerUUID, FactionRole role) {
+        roles.put(playerUUID, role);
+    }
+    
+    public FactionRole getRole(UUID playerUUID) {
+        if (playerUUID.equals(leader)) {
+            return FactionRole.OWNER; // Safety fallback
+        }
+        return roles.getOrDefault(playerUUID, FactionRole.MEMBER);
+    }
+    
+    public boolean isCoLeader(UUID player) {
+        return getRole(player) == FactionRole.COLEADER;
+    }
+    
+    public boolean isOwner(UUID player) {
+        return player.equals(leader);
     }
     
 }

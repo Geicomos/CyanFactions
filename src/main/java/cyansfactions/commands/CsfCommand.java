@@ -77,6 +77,11 @@ public class CsfCommand implements CommandExecutor {
                 new InviteCommand(factionManager).onCommand(sender, command, label, new String[]{args[1]});
                 break;
 
+            case "list":
+                new ListCommand(factionManager, chunkManager).onCommand(sender, command, label, args);
+                break;
+
+
             case "acceptinvite":
                 new AcceptInviteCommand(factionManager).onCommand(sender, command, label, new String[]{});
                 break;
@@ -121,6 +126,14 @@ public class CsfCommand implements CommandExecutor {
                 listWarpsCommand.execute(player, args);
                 break;
     
+            case "promote":
+                new PromoteCommand(factionManager).onCommand(sender, command, label, new String[]{args[1]});
+                break;
+            
+            case "demote":
+                new DemoteCommand(factionManager).onCommand(sender, command, label, new String[]{args[1]});
+                break;
+            
             case "deposit":
                 if (args.length != 2) {
                     player.sendMessage("Usage: /csf deposit <amount>");

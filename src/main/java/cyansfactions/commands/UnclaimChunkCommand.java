@@ -33,10 +33,10 @@ public class UnclaimChunkCommand implements CommandExecutor {
 
         Faction faction = factionManager.getFactionByPlayer(player);
 
-        if (!faction.getLeader().equals(player.getUniqueId())) {
-            player.sendMessage("§3[CyansFactions]§r Only the faction leader can unclaim land!");
+        if (!faction.isOwner(player.getUniqueId()) && !faction.isCoLeader(player.getUniqueId())) {
+            player.sendMessage("§3[CyansFactions]§r Only the owner or co-leaders can do that!");
             return true;
-        }
+        }    
 
         Chunk chunk = player.getLocation().getChunk();
 

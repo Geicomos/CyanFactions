@@ -19,3 +19,6 @@ warp:
   pvp-cooldown: 30 # How long if a player is in pvp they wait before teleporting
   cooldown-seconds: 120 # Cooldown between warping (seconds)
   max: 5 # Max number of warps per faction
+
+chat:
+  format: '{DISPLAYNAME} &7:&f {MESSAGE}'

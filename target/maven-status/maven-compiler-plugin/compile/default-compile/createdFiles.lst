@@ -1,7 +1,9 @@
 cyansfactions\managers\WarManager.class
+cyansfactions\models\FactionRole.class
 cyansfactions\managers\ChunkManager.class
 cyansfactions\storage\FactionsDataManager.class
 cyansfactions\models\Faction.class
+cyansfactions\commands\PromoteCommand.class
 cyansfactions\listeners\ChatFormatListener.class
 cyansfactions\commands\HelpCommand3.class
 cyansfactions\commands\InviteCommand.class
@@ -20,11 +22,13 @@ cyansfactions\CyansFactions.class
 cyansfactions\commands\HelpCommand2.class
 cyansfactions\commands\PeaceCommand.class
 cyansfactions\commands\HomeCommand.class
+cyansfactions\commands\DemoteCommand.class
 cyansfactions\commands\SetWarpCommand.class
 cyansfactions\commands\CreateFactionCommand.class
 cyansfactions\commands\DisbandCommand.class
 cyansfactions\listeners\CombatListener.class
 cyansfactions\commands\CsfCommand$1.class
+cyansfactions\commands\ListCommand.class
 cyansfactions\commands\SetHomeCommand.class
 cyansfactions\commands\LeaveFactionCommand.class
 cyansfactions\commands\ListWarpsCommand.class

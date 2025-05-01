@@ -15,6 +15,7 @@ public class FactionManager {
     private final Map<UUID, String> playerFactions = new HashMap<>();
     private final Map<UUID, String> invites = new HashMap<>();
     private final Map<String, String> pendingAllyRequests = new HashMap<>();
+    @SuppressWarnings("unused")
     private final CyansFactions plugin;
 
     public FactionManager(CyansFactions plugin) {

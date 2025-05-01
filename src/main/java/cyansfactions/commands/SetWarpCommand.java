@@ -36,6 +36,7 @@ public class SetWarpCommand {
             return;
         }
 
+        
         String warpName = args[1].toLowerCase();
         String password = args.length >= 3 ? args[2] : null; // Optional password
 

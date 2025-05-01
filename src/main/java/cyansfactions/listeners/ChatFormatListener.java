@@ -19,12 +19,14 @@ public class ChatFormatListener implements Listener {
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         Faction faction = factionManager.getFactionByPlayer(player); 
-
+    
         String factionTag = "";
         if (faction != null) {
             factionTag = "§7[" + faction.getName() + "§7] ";
         }
-
-        event.setFormat(factionTag + "§f" + player.getName() + "§7: §f" + event.getMessage());
-    }
+    
+        player.setDisplayName(factionTag + "§f" + player.getName());
+    
+        // Now Essentials will automatically use {DISPLAYNAME} in its config.
+    }    
 }
