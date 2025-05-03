@@ -34,3 +34,4 @@ cyansfactions\commands\ListCommand.class
 cyansfactions\commands\SetHomeCommand.class
 cyansfactions\commands\LeaveFactionCommand.class
 cyansfactions\commands\ListWarpsCommand.class
+cyansfactions\commands\HelpCommand4.class

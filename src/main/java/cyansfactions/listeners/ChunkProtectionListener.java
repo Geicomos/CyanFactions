@@ -10,9 +10,12 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.block.Action;
@@ -90,32 +93,30 @@ public class ChunkProtectionListener implements Listener {
         Player player = event.getPlayer();
         Block block = event.getBlock();
         Chunk chunk = block.getChunk();
-        Faction chunkFaction = chunkManager.getFactionAt(chunk); // Faction owning the chunk
-    
+        Faction chunkFaction = chunkManager.getFactionAt(chunk); // Who owns the land
         Material type = block.getType();
-        boolean isTNT = type == Material.TNT;
-        boolean isTNTCart = type == Material.TNT_MINECART;
+
+        if (chunkFaction == null) return; // Unclaimed land is unprotected
     
-        // If it's not TNT, handle normal block placement below
-        if (!isTNT && !isTNTCart) {
-            return; // Not TNT, continue with your other block protection elsewhere
-        }
-    
-        // If chunk is unclaimed, allow placing TNT
-        if (chunkFaction == null) {
-            return;
-        }
-    
-        // Get player's faction
         Faction playerFaction = chunkManager.getFactionAt(player.getLocation().getChunk());
-        
-        // If the player does not belong to this faction
-        if (playerFaction == null || !chunkFaction.hasMember(player.getUniqueId())) {
-            event.setCancelled(true);
-            player.sendMessage("§cYou cannot place TNT in another faction's land!");
-            return;
+    
+        // Allow if player is a member of the owning faction
+        if (chunkFaction.hasMember(player.getUniqueId())) return;
+
+        // Allow during war (but not lava/water)
+        if (playerFaction != null && warManager.isAtWar(playerFaction)) {
+            if (type == Material.LAVA || type == Material.WATER) {
+                event.setCancelled(true);
+                player.sendMessage(chunkFaction.getName() + " §cDoes not allow you to place " + type.name().toLowerCase() + ".");
+            }
+            return; // Allow placing other blocks during war
         }
+    
+        // Block placement denied
+        event.setCancelled(true);
+        player.sendMessage(chunkFaction.getName() + " §cDoes not allow you to place blocks here.");
     }
+    
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -148,6 +149,51 @@ public class ChunkProtectionListener implements Listener {
     }
 
     @EventHandler
+    public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlockClicked().getRelative(event.getBlockFace());
+        Chunk chunk = block.getChunk();
+        Faction chunkFaction = chunkManager.getFactionAt(chunk);
+
+        if (chunkFaction == null) return;
+        if (chunkFaction.hasMember(player.getUniqueId())) return;
+
+        Faction playerFaction = chunkManager.getFactionAt(player.getLocation().getChunk());
+
+        // Block bucket use unless in war and not placing water/lava
+        if (event.getBucket() == Material.WATER_BUCKET || event.getBucket() == Material.LAVA_BUCKET) {
+            event.setCancelled(true);
+            player.sendMessage(chunkFaction.getName() + " §cDoes not allow you to pour liquids here.");
+            return;
+        }
+
+        if (playerFaction == null || !warManager.isAtWar(playerFaction)) {
+            event.setCancelled(true);
+            player.sendMessage(chunkFaction.getName() + " §cDoes not allow you to place blocks here.");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+        public void onLiquidFlow(BlockFromToEvent event) {
+            Block fromBlock = event.getBlock();
+            Block toBlock = event.getToBlock();
+
+            // Only care about actual liquid moving into air blocks
+            if (!fromBlock.isLiquid() || !toBlock.getType().isAir()) return;
+
+            Chunk fromChunk = fromBlock.getChunk();
+            Chunk toChunk = toBlock.getChunk();
+
+            Faction fromFaction = chunkManager.getFactionAt(fromChunk);
+            Faction toFaction = chunkManager.getFactionAt(toChunk);
+
+            // Cancel if liquid is flowing from unclaimed land into claimed land
+            if (fromFaction == null && toFaction != null) {
+                event.setCancelled(true);
+            }
+        }
+
+    @EventHandler
     public void onEntityExplode(EntityExplodeEvent event) {
         if (event.getEntityType() != EntityType.PRIMED_TNT && event.getEntityType() != EntityType.MINECART_TNT) {
             return;
@@ -178,5 +224,6 @@ public class ChunkProtectionListener implements Listener {
                 }
             }
         }
+        
     }
 }

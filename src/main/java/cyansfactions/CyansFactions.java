@@ -11,12 +11,12 @@ import cyansfactions.commands.DelWarpCommand;
 import cyansfactions.commands.HomeCommand;
 import cyansfactions.commands.InviteCommand;
 import cyansfactions.commands.LeaveFactionCommand;
+import cyansfactions.listeners.FactionsChatListener;
 import cyansfactions.commands.ListWarpsCommand;
 import cyansfactions.commands.SetHomeCommand;
 import cyansfactions.listeners.ChunkEnterLeaveListener;
 import cyansfactions.listeners.ChunkProtectionListener;
 import cyansfactions.listeners.CombatListener;
-import cyansfactions.listeners.FactionsChatListener;
 import cyansfactions.managers.ChatManager;
 import cyansfactions.managers.ChunkManager;
 import cyansfactions.managers.FactionManager;
@@ -65,9 +65,7 @@ public class CyansFactions extends JavaPlugin {
         getCommand("csf").setExecutor(csfCommand);
         getServer().getPluginManager().registerEvents(new CombatListener(warpCommand.getLastCombatMap()), this);
         getServer().getPluginManager().registerEvents(new CombatListener(homeCommand.getLastCombatMap()), this);
-        getServer().getPluginManager().registerEvents(
-            new FactionsChatListener(factionManager, chatManager), this
-        );
+        getServer().getPluginManager().registerEvents(new FactionsChatListener(factionManager, chatManager, chunkManager, warManager), this);
 
         factionsDataManager.loadFactions(factionManager, chunkManager);
         factionsDataManager.loadWars(warManager, factionManager);

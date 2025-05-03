@@ -1,5 +1,5 @@
 name: CyansFactions
-version: 1.0
+version: 1.0.1
 main: cyansfactions.CyansFactions
 api-version: 1.18
 depend: [Vault]

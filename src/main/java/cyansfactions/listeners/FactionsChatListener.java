@@ -1,13 +1,19 @@
 package cyansfactions.listeners;
 
 import cyansfactions.managers.ChatManager;
+import cyansfactions.managers.ChunkManager;
 import cyansfactions.managers.FactionManager;
+import cyansfactions.managers.WarManager;
 import cyansfactions.models.Faction;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import java.util.UUID;
 
@@ -15,10 +21,14 @@ public class FactionsChatListener implements Listener {
 
     private final FactionManager factionManager;
     private final ChatManager chatManager;
+    private final ChunkManager chunkManager;
+    private final WarManager warManager;
 
-    public FactionsChatListener(FactionManager factionManager, ChatManager chatManager) {
+    public FactionsChatListener(FactionManager factionManager, ChatManager chatManager, ChunkManager chunkManager, WarManager warManager) {
         this.factionManager = factionManager;
         this.chatManager = chatManager;
+        this.chunkManager = chunkManager;
+        this.warManager = warManager;
     }
 
     @EventHandler
@@ -55,5 +65,31 @@ public class FactionsChatListener implements Listener {
         }
 
         sender.setDisplayName(tag + "§f" + sender.getName()); // for EssentialsChat etc.
+        
     }
+
+    @EventHandler
+        public void onBucketEmpty(PlayerBucketEmptyEvent event) {
+            Player player = event.getPlayer();
+            Block block = event.getBlockClicked().getRelative(event.getBlockFace());
+            Chunk chunk = block.getChunk();
+            Faction chunkFaction = chunkManager.getFactionAt(chunk);
+
+            if (chunkFaction == null) return;
+            if (chunkFaction.hasMember(player.getUniqueId())) return;
+
+            Faction playerFaction = chunkManager.getFactionAt(player.getLocation().getChunk());
+
+            // Block bucket use unless in war and not placing water/lava
+            if (event.getBucket() == Material.WATER_BUCKET || event.getBucket() == Material.LAVA_BUCKET) {
+                event.setCancelled(true);
+                player.sendMessage(chunkFaction.getName() + " §cDoes not allow you to pour liquids here.");
+                return;
+            }
+
+            if (playerFaction == null || !warManager.isAtWar(playerFaction)) {
+                event.setCancelled(true);
+                player.sendMessage(chunkFaction.getName() + " §cDoes not allow you to place blocks here.");
+            }
+        }    
 }
