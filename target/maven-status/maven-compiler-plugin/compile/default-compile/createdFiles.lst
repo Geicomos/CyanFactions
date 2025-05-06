@@ -33,6 +33,7 @@ cyansfactions\commands\CsfCommand$1.class
 cyansfactions\commands\FactionChatToggleCommand.class
 cyansfactions\commands\ListCommand.class
 cyansfactions\commands\SetHomeCommand.class
+cyansfactions\commands\ForceJoinFactionCommand.class
 cyansfactions\commands\LeaveFactionCommand.class
 cyansfactions\commands\ListWarpsCommand.class
 cyansfactions\commands\HelpCommand4.class

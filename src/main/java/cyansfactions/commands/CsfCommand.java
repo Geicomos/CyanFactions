@@ -503,6 +503,10 @@ public class CsfCommand implements CommandExecutor {
             }
             break;
     
+            // Admin Commands
+            case "forcejoin":
+                new ForceJoinFactionCommand(factionManager).onCommand(sender, command, label, new String[]{args[1]});
+                break;
 
             default:
                 player.sendMessage("§3[CyansFactions]§r Unknown Command, see commands at /csf help");
