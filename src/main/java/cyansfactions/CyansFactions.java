@@ -65,7 +65,7 @@ public class CyansFactions extends JavaPlugin {
         getCommand("csf").setExecutor(csfCommand);
         getServer().getPluginManager().registerEvents(new CombatListener(warpCommand.getLastCombatMap()), this);
         getServer().getPluginManager().registerEvents(new CombatListener(homeCommand.getLastCombatMap()), this);
-        getServer().getPluginManager().registerEvents(new FactionsChatListener(factionManager, chatManager, chunkManager, warManager), this);
+        getServer().getPluginManager().registerEvents(new FactionsChatListener(factionManager, chatManager), this);
 
         factionsDataManager.loadFactions(factionManager, chunkManager);
         factionsDataManager.loadWars(warManager, factionManager);

@@ -4,11 +4,14 @@ import cyansfactions.managers.FactionManager;
 import cyansfactions.CyansFactions;
 import cyansfactions.managers.ChunkManager;
 import cyansfactions.models.Faction;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.UUID;
 
 public class ClaimChunkCommand implements CommandExecutor {
 
@@ -40,7 +43,7 @@ public class ClaimChunkCommand implements CommandExecutor {
         if (!faction.isOwner(player.getUniqueId()) && !faction.isCoLeader(player.getUniqueId())) {
             player.sendMessage("§3[CyansFactions]§r Only the owner or co-leaders can do that!");
             return true;
-        }        
+        }
 
         Chunk chunk = player.getLocation().getChunk();
         int claimedChunks = chunkManager.getClaimedChunks(faction).size();
@@ -55,22 +58,28 @@ public class ClaimChunkCommand implements CommandExecutor {
             return true;
         }
 
-        double claimCost = baseClaimCost * Math.pow(multiplyBy, claimedChunks); 
+        double claimCost = baseClaimCost * Math.pow(multiplyBy, claimedChunks);
 
-        // Check balance
         if (faction.getBalance() < claimCost) {
             player.sendMessage("§3[CyansFactions]§r Your faction doesn't have enough money! Need $" + String.format("%.2f", claimCost));
             return true;
         }
 
-        // Claim and withdraw
         if (!faction.withdraw(claimCost)) {
             player.sendMessage("§3[CyansFactions]§r §cFailed to withdraw from faction balance!");
             return true;
         }
 
         chunkManager.claimChunk(faction, chunk);
-        player.sendMessage("§3[CyansFactions]§r §aChunk claimed for your faction! (-$" + String.format("%.2f", claimCost) + ")");
+
+        String personal = "§3[CyansFactions]§r §aChunk claimed for your faction! (-$" + String.format("%.2f", claimCost) + ")";
+        String announce = "§3[CyansFactions]§r §e" + player.getName() + " claimed a chunk for the faction (-$" + String.format("%.2f", claimCost) + ").";
+
+        player.sendMessage(personal);
+        for (UUID uuid : faction.getMembers()) {
+            Player m = Bukkit.getPlayer(uuid);
+            if (m != null && m.isOnline() && !m.equals(player)) m.sendMessage(announce);
+        }
         return true;
     }
 }

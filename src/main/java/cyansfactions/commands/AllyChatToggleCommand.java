@@ -7,11 +7,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class FactionChatToggleCommand implements CommandExecutor {
+public class AllyChatToggleCommand implements CommandExecutor {
 
     private final ChatManager chatManager;
 
-    public FactionChatToggleCommand(ChatManager chatManager) {
+    public AllyChatToggleCommand(ChatManager chatManager) {
         this.chatManager = chatManager;
     }
 
@@ -22,10 +22,10 @@ public class FactionChatToggleCommand implements CommandExecutor {
             return true;
         }
         
-        chatManager.toggleFactionChat(player.getUniqueId());
-        boolean isOn = chatManager.isInFactionChat(player.getUniqueId());
+        chatManager.toggleAllyChat(player.getUniqueId());
+        boolean isOn = chatManager.isInAllyChat(player.getUniqueId());
 
-        player.sendMessage("§3[CyansFactions]§r Faction chat " + (isOn ? "§aenabled" : "§cdisabled") + "§r.");
+        player.sendMessage("§3[CyansFactions]§r Ally chat " + (isOn ? "§aenabled" : "§cdisabled") + "§r.");
         return true;
     }
 }

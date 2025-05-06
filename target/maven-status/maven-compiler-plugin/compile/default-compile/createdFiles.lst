@@ -12,6 +12,7 @@ cyansfactions\commands\CsfCommand$2.class
 cyansfactions\commands\CsfCommand.class
 cyansfactions\commands\WarpCommand.class
 cyansfactions\managers\FactionManager.class
+cyansfactions\commands\AllyChatToggleCommand.class
 cyansfactions\listeners\ChunkEnterLeaveListener.class
 cyansfactions\commands\ClaimChunkCommand.class
 cyansfactions\commands\HelpCommand.class

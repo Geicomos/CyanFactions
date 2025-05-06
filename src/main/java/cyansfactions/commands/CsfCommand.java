@@ -84,6 +84,10 @@ public class CsfCommand implements CommandExecutor {
                 new FactionChatToggleCommand(chatManager).onCommand(sender, command, label, args);
                 break;
                 
+            case "allychat":
+                new AllyChatToggleCommand(chatManager).onCommand(sender, command, label, args);
+                break;
+
             case "invite":
                 new InviteCommand(factionManager).onCommand(sender, command, label, new String[]{args[1]});
                 break;
@@ -159,32 +163,29 @@ public class CsfCommand implements CommandExecutor {
                     if (playerFaction == null) {
                         player.sendMessage("§3[CyansFactions]§r You are not in a faction.");
                         return true;
-                    }                    
+                    }
                     if (warManager.isAtWar(playerFaction)) {
                         player.sendMessage("§3[CyansFactions]§r You can't deposit money during a war!");
                         return true;
-                    }                    
+                    }
                     if (economy.getBalance(player) < amount) {
                         player.sendMessage("§3[CyansFactions]§r You don't have enough money!");
                         return true;
                     }
                     economy.withdrawPlayer(player, amount);
                     playerFaction.deposit(amount);
-                    player.sendMessage("§3[CyansFactions]§r Deposited $" + amount + " into your faction bank!");
+                    String personalMsg = "§3[CyansFactions]§r Deposited $" + amount + " into your faction bank!";
+                    String announce = "§3[CyansFactions]§r §a" + player.getName() + " deposited $" + amount + " into the faction bank.";
+                    player.sendMessage(personalMsg);
+                    for (UUID uuid : playerFaction.getMembers()) {
+                        Player m = Bukkit.getPlayer(uuid);
+                        if (m != null && m.isOnline() && !m.equals(player)) m.sendMessage(announce);
+                    }
                 } catch (NumberFormatException e) {
                     player.sendMessage("§3[CyansFactions]§r Invalid number.");
                 }
-            break;
-
-            case "balance":
-                if (!factionManager.hasFaction(player)) {
-                    player.sendMessage("§3[CyansFactions]§r You are not in a faction.");
-                    return true;
-                }
-                Faction faction = factionManager.getFactionByPlayer(player);
-                player.sendMessage("§3[CyansFactions]§r Your faction balance is: §a$" + faction.getBalance());
-            break;
-
+                break;
+            
             case "withdraw":
                 if (args.length != 2) {
                     player.sendMessage("Usage: /csf withdraw <amount>");
@@ -197,25 +198,40 @@ public class CsfCommand implements CommandExecutor {
                         player.sendMessage("§3[CyansFactions]§r Amount must be positive!");
                         return true;
                     }
-                    if (!factionManager.hasFaction(player)) {
+                    if (playerFaction == null) {
                         player.sendMessage("§3[CyansFactions]§r You are not in a faction.");
                         return true;
                     }
                     if (warManager.isAtWar(playerFaction)) {
                         player.sendMessage("§3[CyansFactions]§r You can't withdraw money during a war!");
                         return true;
-                    }  
+                    }
                     if (playerFaction.getBalance() < amount) {
                         player.sendMessage("§3[CyansFactions]§r Your faction doesn't have enough money!");
                         return true;
                     }
                     playerFaction.withdraw(amount);
                     economy.depositPlayer(player, amount);
-                    player.sendMessage("§3[CyansFactions]§r Withdrew " + amount + "$ from your faction bank!");
+                    String personalMsg = "§3[CyansFactions]§r Withdrew $" + amount + " from your faction bank!";
+                    String announce = "§3[CyansFactions]§r §c" + player.getName() + " withdrew $" + amount + " from the faction bank.";
+                    player.sendMessage(personalMsg);
+                    for (UUID uuid : playerFaction.getMembers()) {
+                        Player m = Bukkit.getPlayer(uuid);
+                        if (m != null && m.isOnline() && !m.equals(player)) m.sendMessage(announce);
+                    }
                 } catch (NumberFormatException e) {
                     player.sendMessage("§3[CyansFactions]§r Invalid number.");
                 }
-                break;
+                break;            
+
+            case "balance":
+                if (!factionManager.hasFaction(player)) {
+                    player.sendMessage("§3[CyansFactions]§r You are not in a faction.");
+                    return true;
+                }
+                Faction faction = factionManager.getFactionByPlayer(player);
+                player.sendMessage("§3[CyansFactions]§r Your faction balance is: §a$" + faction.getBalance());
+            break;
 
             case "war":
                     if (args.length != 2) {

@@ -1,34 +1,26 @@
 package cyansfactions.listeners;
 
 import cyansfactions.managers.ChatManager;
-import cyansfactions.managers.ChunkManager;
 import cyansfactions.managers.FactionManager;
-import cyansfactions.managers.WarManager;
 import cyansfactions.models.Faction;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class FactionsChatListener implements Listener {
 
     private final FactionManager factionManager;
     private final ChatManager chatManager;
-    private final ChunkManager chunkManager;
-    private final WarManager warManager;
 
-    public FactionsChatListener(FactionManager factionManager, ChatManager chatManager, ChunkManager chunkManager, WarManager warManager) {
+    public FactionsChatListener(FactionManager factionManager, ChatManager chatManager) {
         this.factionManager = factionManager;
         this.chatManager = chatManager;
-        this.chunkManager = chunkManager;
-        this.warManager = warManager;
     }
 
     @EventHandler
@@ -37,7 +29,6 @@ public class FactionsChatListener implements Listener {
         UUID senderUUID = sender.getUniqueId();
         Faction senderFaction = factionManager.getFactionByPlayer(sender);
 
-        // If faction chat is toggled for this player
         if (chatManager.isInFactionChat(senderUUID)) {
             if (senderFaction == null) {
                 sender.sendMessage("§3[CyansFactions] §cYou are not in a faction.");
@@ -49,47 +40,38 @@ public class FactionsChatListener implements Listener {
 
             for (UUID memberUUID : senderFaction.getMembers()) {
                 Player member = Bukkit.getPlayer(memberUUID);
-                if (member != null && member.isOnline()) {
-                    member.sendMessage(message);
-                }
+                if (member != null && member.isOnline()) member.sendMessage(message);
             }
 
-            event.setCancelled(true); // Don't send to global chat
+            event.setCancelled(true);
             return;
         }
 
-        // Otherwise, modify their global chat name with faction tag
-        String tag = "";
-        if (senderFaction != null) {
-            tag = "§7[" + senderFaction.getName() + "] ";
-        }
-
-        sender.setDisplayName(tag + "§f" + sender.getName()); // for EssentialsChat etc.
-        
-    }
-
-    @EventHandler
-        public void onBucketEmpty(PlayerBucketEmptyEvent event) {
-            Player player = event.getPlayer();
-            Block block = event.getBlockClicked().getRelative(event.getBlockFace());
-            Chunk chunk = block.getChunk();
-            Faction chunkFaction = chunkManager.getFactionAt(chunk);
-
-            if (chunkFaction == null) return;
-            if (chunkFaction.hasMember(player.getUniqueId())) return;
-
-            Faction playerFaction = chunkManager.getFactionAt(player.getLocation().getChunk());
-
-            // Block bucket use unless in war and not placing water/lava
-            if (event.getBucket() == Material.WATER_BUCKET || event.getBucket() == Material.LAVA_BUCKET) {
-                event.setCancelled(true);
-                player.sendMessage(chunkFaction.getName() + " §cDoes not allow you to pour liquids here.");
+        if (chatManager.isInAllyChat(senderUUID)) {
+            if (senderFaction == null) {
+                sender.sendMessage("§3[CyansFactions] §cYou are not in a faction.");
+                chatManager.setFactionChat(senderUUID, false);
                 return;
             }
 
-            if (playerFaction == null || !warManager.isAtWar(playerFaction)) {
-                event.setCancelled(true);
-                player.sendMessage(chunkFaction.getName() + " §cDoes not allow you to place blocks here.");
+            String message = "§d[Ally Chat] §7" + sender.getName() + "§f: " + event.getMessage();
+            Set<UUID> recipients = new HashSet<>(senderFaction.getMembers());
+
+            for (String allyName : senderFaction.getAllies()) {
+                Faction allyFaction = factionManager.getFactionByName(allyName);
+                if (allyFaction != null) recipients.addAll(allyFaction.getMembers());
             }
-        }    
+
+            for (UUID uuid : recipients) {
+                Player p = Bukkit.getPlayer(uuid);
+                if (p != null && p.isOnline()) p.sendMessage(message);
+            }
+
+            event.setCancelled(true);
+            return;
+        }
+
+        String tag = senderFaction != null ? "§7[" + senderFaction.getName() + "] " : "";
+        sender.setDisplayName(tag + "§f" + sender.getName());
+    }
 }
