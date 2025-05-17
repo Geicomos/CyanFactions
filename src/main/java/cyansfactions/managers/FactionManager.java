@@ -137,4 +137,7 @@ public class FactionManager {
         pendingAllyRequests.remove(targetFaction.toLowerCase());
     }
     
+    public void setFactionForPlayer(Player player, Faction faction) {
+        playerFactions.put(player.getUniqueId(), faction.getName().toLowerCase());
+    }
 }

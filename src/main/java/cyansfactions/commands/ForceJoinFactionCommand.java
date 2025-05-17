@@ -55,6 +55,7 @@ public class ForceJoinFactionCommand implements CommandExecutor {
         }
 
         targetFaction.addMember(executer.getUniqueId());
+        factionManager.setFactionForPlayer(executer, targetFaction);
 
         executer.sendMessage("§3[CyansFactions]§r You force‑joined " + targetFaction.getName() + ".");
         String announce = "§3[CyansFactions]§r §d" + executer.getName() + " has joined the faction.";

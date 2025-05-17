@@ -109,7 +109,8 @@ public class CsfCommand implements CommandExecutor {
             case "unclaim":
                 new UnclaimChunkCommand(factionManager, chunkManager).onCommand(sender, command, label, args);
                 break;
-            
+                
+            case "leave":
             case "leavefaction":
                 new LeaveFactionCommand(factionManager).onCommand(sender, command, label, new String[]{});
                 break;
