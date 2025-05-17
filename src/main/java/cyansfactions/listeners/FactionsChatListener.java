@@ -50,17 +50,33 @@ public class FactionsChatListener implements Listener {
         if (chatManager.isInAllyChat(senderUUID)) {
             if (senderFaction == null) {
                 sender.sendMessage("§3[CyansFactions] §cYou are not in a faction.");
-                chatManager.setFactionChat(senderUUID, false);
+                chatManager.setAllyChat(senderUUID, null);
                 return;
             }
 
-            String message = "§d[Ally Chat] §7" + sender.getName() + "§f: " + event.getMessage();
-            Set<UUID> recipients = new HashSet<>(senderFaction.getMembers());
-
-            for (String allyName : senderFaction.getAllies()) {
-                Faction allyFaction = factionManager.getFactionByName(allyName);
-                if (allyFaction != null) recipients.addAll(allyFaction.getMembers());
+            String targetAllyName = chatManager.getAllyChatTarget(senderUUID);
+            if (targetAllyName == null) {
+                sender.sendMessage("§3[CyansFactions] §cNo ally faction selected for chat.");
+                chatManager.setAllyChat(senderUUID, null);
+                return;
             }
+
+            if (!senderFaction.getAllies().contains(targetAllyName)) {
+                sender.sendMessage("§3[CyansFactions] §cYou are not allied with " + targetAllyName + ".");
+                chatManager.setAllyChat(senderUUID, null);
+                return;
+            }
+
+            Faction allyFaction = factionManager.getFactionByName(targetAllyName);
+            if (allyFaction == null) {
+                sender.sendMessage("§3[CyansFactions] §cThe ally faction no longer exists.");
+                chatManager.setAllyChat(senderUUID, null);
+                return;
+            }
+
+            String message = "§d[Ally Chat - " + targetAllyName + "] §7" + sender.getName() + "§f: " + event.getMessage();
+            Set<UUID> recipients = new HashSet<>(senderFaction.getMembers());
+            recipients.addAll(allyFaction.getMembers());
 
             for (UUID uuid : recipients) {
                 Player p = Bukkit.getPlayer(uuid);

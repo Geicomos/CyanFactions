@@ -3,10 +3,12 @@ package cyansfactions.managers;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChatManager {
     private final Set<UUID> factionChatToggled = new HashSet<>();
-    private final Set<UUID> allyChatToggled = new HashSet<>();
+    private final Map<UUID, String> allyChatTargets = new HashMap<>();
 
     public boolean isInFactionChat(UUID uuid) {
         return factionChatToggled.contains(uuid);
@@ -27,20 +29,18 @@ public class ChatManager {
     }
 
     public boolean isInAllyChat(UUID uuid) {
-        return allyChatToggled.contains(uuid);
+        return allyChatTargets.containsKey(uuid);
     }
 
-    public void toggleAllyChat(UUID uuid) {
-        if (!allyChatToggled.add(uuid)) {
-            allyChatToggled.remove(uuid);
-        }
+    public String getAllyChatTarget(UUID uuid) {
+        return allyChatTargets.get(uuid);
     }
 
-    public void setAllyChat(UUID uuid, boolean enabled) {
-        if (enabled) {
-            allyChatToggled.add(uuid);
+    public void setAllyChat(UUID uuid, String targetFaction) {
+        if (targetFaction == null) {
+            allyChatTargets.remove(uuid);
         } else {
-            allyChatToggled.remove(uuid);
+            allyChatTargets.put(uuid, targetFaction.toLowerCase());
         }
     }
 }

@@ -10,15 +10,16 @@ home:
 
 claim:
   cost-to-claim: 600.0 #The amount it will cost to claim the first chunk. This is multiplied every chunk bought
-  max-claims: 20 # Max amount of claims a faction can have
-  multiply-by: 2.0 # How much the cost of a claim will be multiplied each chunk bought.
+  max-claims: 32 # Max amount of claims a faction can have
+  multiply-by: 1.26 # How much the cost of a claim will be multiplied each chunk bought.
 
 warp:
   cost-to-set: 100.0 # How much it costs to set a warp
   cost-to-use: 50.0 # How much it costs to warp
   pvp-cooldown: 30 # How long if a player is in pvp they wait before teleporting
   cooldown-seconds: 120 # Cooldown between warping (seconds)
-  max: 5 # Max number of warps per faction
+  multiply-by: 3.0 # How much the cost of a warp will be multiplied each warp bought.
+  max: 10 # Max number of warps per faction
 
 chat:
   format: '{DISPLAYNAME} &7:&f {MESSAGE}'

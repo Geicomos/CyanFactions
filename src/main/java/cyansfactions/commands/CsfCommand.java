@@ -80,10 +80,12 @@ public class CsfCommand implements CommandExecutor {
                 new CreateFactionCommand(factionManager, CyansFactions.getEconomy()).onCommand(sender, command, label, new String[]{args[1]});
                 break;
 
+            case "fchat":
             case "factionchat":
                 new FactionChatToggleCommand(chatManager).onCommand(sender, command, label, args);
                 break;
-                
+            
+            case "achat":
             case "allychat":
                 new AllyChatToggleCommand(chatManager).onCommand(sender, command, label, args);
                 break;
@@ -116,6 +118,7 @@ public class CsfCommand implements CommandExecutor {
                 new SetHomeCommand(factionManager, chunkManager).onCommand(sender, command, label, args);
                 break;
             
+            case "h":
             case "home":
                 homeCommand.onCommand(sender, command, label, args);
                 break;
@@ -125,7 +128,7 @@ public class CsfCommand implements CommandExecutor {
                 break;
             
             case "setwarp":
-                new SetWarpCommand(factionManager, economy, chunkManager).execute(player, args);
+                new SetWarpCommand(factionManager, chunkManager).execute(player, args);
                 break;
 
             case "warp":
@@ -135,7 +138,10 @@ public class CsfCommand implements CommandExecutor {
             case "delwarp":
                 delWarpCommand.execute(player, args);
                 break;
-
+            
+            case "wl":
+            case "lw":
+            case "warplist":
             case "listwarps":
                 listWarpsCommand.execute(player, args);
                 break;
@@ -148,6 +154,7 @@ public class CsfCommand implements CommandExecutor {
                 new DemoteCommand(factionManager).onCommand(sender, command, label, new String[]{args[1]});
                 break;
             
+            case "d":
             case "deposit":
                 if (args.length != 2) {
                     player.sendMessage("Usage: /csf deposit <amount>");
@@ -185,7 +192,8 @@ public class CsfCommand implements CommandExecutor {
                     player.sendMessage("§3[CyansFactions]§r Invalid number.");
                 }
                 break;
-            
+
+            case "w":
             case "withdraw":
                 if (args.length != 2) {
                     player.sendMessage("Usage: /csf withdraw <amount>");
@@ -222,8 +230,10 @@ public class CsfCommand implements CommandExecutor {
                 } catch (NumberFormatException e) {
                     player.sendMessage("§3[CyansFactions]§r Invalid number.");
                 }
-                break;            
+                break;   
 
+            case "b":
+            case "bal":
             case "balance":
                 if (!factionManager.hasFaction(player)) {
                     player.sendMessage("§3[CyansFactions]§r You are not in a faction.");

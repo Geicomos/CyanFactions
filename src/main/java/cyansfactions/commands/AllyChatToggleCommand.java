@@ -22,7 +22,7 @@ public class AllyChatToggleCommand implements CommandExecutor {
             return true;
         }
         
-        chatManager.toggleAllyChat(player.getUniqueId());
+        chatManager.isInAllyChat(player.getUniqueId());
         boolean isOn = chatManager.isInAllyChat(player.getUniqueId());
 
         player.sendMessage("§3[CyansFactions]§r Ally chat " + (isOn ? "§aenabled" : "§cdisabled") + "§r.");

@@ -8,19 +8,17 @@ import cyansfactions.models.Faction;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import net.milkbowl.vault.economy.Economy;
 
 public class SetWarpCommand {
 
     private final FactionManager factionManager;
-    private final Economy economy;
     private final ChunkManager chunkManager;
-    private final double warpCost = CyansFactions.getInstance().getConfig().getDouble("warp.cost-to-set", 100);
-    private final int warpMax = CyansFactions.getInstance().getConfig().getInt("warp.max-warps", 5);
+    private final double baseWarpCost = CyansFactions.getInstance().getConfig().getDouble("warp.cost-to-set", 100);
+        private final double multiplyBy = CyansFactions.getInstance().getConfig().getDouble("warp.multiply-by", 3.0);
+    private final int warpMax = CyansFactions.getInstance().getConfig().getInt("warp.max-warps", 10);
 
-    public SetWarpCommand(FactionManager factionManager, Economy economy, ChunkManager chunkManager) {
+    public SetWarpCommand(FactionManager factionManager, ChunkManager chunkManager) {
         this.factionManager = factionManager;
-        this.economy = economy;
         this.chunkManager = chunkManager;
     }
 
@@ -39,11 +37,14 @@ public class SetWarpCommand {
         
         String warpName = args[1].toLowerCase();
         String password = args.length >= 3 ? args[2] : null; // Optional password
+        int currentWarps = faction.getWarps().size();
 
         if (faction.getWarps().size() >= warpMax) {
             player.sendMessage("§3[CyansFactions]§r Your faction has reached the max number of warps (" + warpMax + ").");
             return;
         }
+
+        double warpCost = baseWarpCost * Math.pow(multiplyBy, currentWarps);
 
         if (!faction.withdraw(warpCost)) {
             player.sendMessage("§3[CyansFactions]§r Your Faction needs $" + warpCost + " to set a warp.");
@@ -57,8 +58,6 @@ public class SetWarpCommand {
             player.sendMessage("§3[CyansFactions]§r You must be standing in your faction's claimed land to set warps");
             return;
         }
-
-        economy.withdrawPlayer(player, warpCost);
 
         Location loc = player.getLocation();
         faction.setWarp(warpName, loc);

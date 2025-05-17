@@ -1,3 +1,4 @@
+// cyansfactions/commands/FactionChatToggleCommand.java
 package cyansfactions.commands;
 
 import cyansfactions.managers.ChatManager;
